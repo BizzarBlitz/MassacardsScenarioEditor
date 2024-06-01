@@ -1,0 +1,71 @@
+:root {
+	--border-image: "https://static.miraheze.org/massacardswiki/4/46/Border.png";
+	--border-scale-factor: 5;
+}
+
+body {
+	font-weight: bold;
+	font-family: sans-serif;
+	text-align: center;
+	margin: 0;
+}
+
+header {
+	height: 3rem;
+	padding: 0.3rem;
+	background-color: blueviolet;
+}
+
+nav {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: right;
+}
+
+.title {
+	font-size: 3em;
+	left: 50%;
+}
+
+.abs {
+	position: absolute;
+	transform: translateX(-50%);
+}
+
+.role-container {
+	/* border: 1em solid red;
+	border-image: var(--border-image); */
+	display: flex;
+	margin: auto;
+	justify-content: center;
+	padding: 0.5em;
+	flex-wrap: wrap;
+}
+
+.border-container {
+	display: grid;
+}
+
+.border, .border-content {
+	grid-row: 1;
+	grid-column: 1;
+}
+
+.border {
+	z-index: -1; /* Display border under any actual content */
+	
+	border-style: solid;
+	border-width:
+		calc(9px * var(--border-scale-factor))
+		calc(20px * var(--border-scale-factor))
+		calc(3px * var(--border-scale-factor))
+		calc(3px * var(--border-scale-factor));
+	border-image-source: url("https://static.miraheze.org/massacardswiki/4/46/Border.png");
+	border-image-slice: 144 320 48 48; /* Don't ask how i got these numbers i forgor */
+}
+
+.border-content {
+	border: calc(2px * var(--border-scale-factor)) solid transparent;
+}

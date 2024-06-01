@@ -1,0 +1,36 @@
+.role {
+	margin: 0.5em;
+	
+	display: grid;
+	width: 10em;
+	padding: 1em;
+	padding-top: 0.5em; /* So role name looks more centered */
+}
+
+.role-name {
+	/* TODO: Shrink text of overflow (Deity of Depression) */
+	height: 1.5em;
+	width: 100%;
+	align-content: center;
+	text-align: center;
+	border: 0;
+}
+
+.role-image {
+	width: 100%;
+	margin-bottom: 0.5em;
+	background-color: black;
+	background-size: 7.75em;
+}
+
+.role-buttons {
+	display: flex;
+	justify-content: space-between;
+}
+
+.role-button {
+	height: 3.75em;
+	width: 3.75em;
+	background: none;
+	border: 0.125em solid red;
+}
