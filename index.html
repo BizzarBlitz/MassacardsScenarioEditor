@@ -13,9 +13,9 @@
 <body>
 	<header>
 		<nav class="topbar">
-			<span class="title abs">Massacards Scenario Editor</span>
+			<span class="title abs">Massacards Scenario Editor<!--Secret 🤫--></span>
 			<a href="https://github.com/BizzarBlitz/MassacardsScenarioEditor">
-				<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Github" width="50" height="50">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Github">
 			</a>
 		</nav>
 	</header>
@@ -23,10 +23,10 @@
 	A tool for quickly editing <a href="https://massacremansionoff.wixsite.com/massacards">Massacards</a> role combinations<br>
 	Developed by BizzarBlitz
 
-	<div class="border-container">
+	<div class="border-container" id="scenario-border-container" style="width: 90%; margin: auto;">
 		<div class="border"></div>
 		<div class="border-content">
-			<div class="role-container">
+			<div class="role-container" id="role-container">
 				
 			</div>
 		</div>
@@ -35,6 +35,6 @@
 </body>
 
 <!-- Put scripts at bottom to fix preloading bugs -->
-<script src="script.js"></script>
+<script src="script.js" type="module"></script>
 
 </html>

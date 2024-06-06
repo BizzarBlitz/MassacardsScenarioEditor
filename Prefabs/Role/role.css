@@ -9,7 +9,7 @@
 
 .role-name {
 	/* TODO: Shrink text of overflow (Deity of Depression) */
-	height: 1.5em;
+	height: 1.5rem;
 	width: 100%;
 	align-content: center;
 	text-align: center;
@@ -25,12 +25,56 @@
 
 .role-buttons {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
 .role-button {
-	height: 3.75em;
-	width: 3.75em;
 	background: none;
 	border: 0.125em solid red;
+}
+
+.role-button:hover {
+	background-color: rgba(255, 0, 0, 0.375);
+}
+
+#randomize, #lock {
+	height: 3.75em;
+	width: 3.75em;
+	margin-bottom: 0.5em;
+}
+
+#alignment {
+	width: 100%;
+	height: 1.5em;
+	display: flex;
+
+	& #right-arrow {
+		rotate: 0.5turn;
+	}
+
+	& .alignment-name {
+		border: 0;
+		padding: 2px;
+		width: 56.25%;
+		flex-grow: 1; /* Fill remaining space */
+		text-align: center;
+		font-size: 12px;
+	}
+
+	& img {
+		height: 100%;
+		width: 1em;
+		padding: 1px;
+	}
+
+	& img:hover {
+		filter: invert(0.25);
+	}
+
+	& img.alignment-image {
+		width: auto;
+		aspect-ratio: 1;
+		/* filter: none; */
+	}
 }

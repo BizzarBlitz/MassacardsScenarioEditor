@@ -7,13 +7,29 @@ body {
 	font-weight: bold;
 	font-family: sans-serif;
 	text-align: center;
+	color: white;
+	background-color: black;
 	margin: 0;
 }
 
+input {
+	background: none;
+	color: white;
+}
+
+a {
+	color: red;
+}
+
 header {
-	height: 3rem;
-	padding: 0.3rem;
-	background-color: blueviolet;
+	height: 4rem;
+	padding: 0.2rem;
+	background-color: red;
+
+	& img {
+		filter: brightness(0);
+		height: 100%;
+	}
 }
 
 nav {
@@ -27,6 +43,7 @@ nav {
 .title {
 	font-size: 3em;
 	left: 50%;
+	line-height: 0;
 }
 
 .abs {
