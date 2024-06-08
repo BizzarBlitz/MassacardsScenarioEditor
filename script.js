@@ -72,7 +72,7 @@ async function shrinkTextOnOverflow(element) {
 
 async function getRole() {
 	const fetchPromise = new Promise(async (resolve) => {
-		const responseString = await fetch("Prefabs/Role/role.html").then((response) => (response.text()))
+		const responseString = await fetch("./Prefabs/Role/role.html").then((response) => (response.text()))
 		resolve(new DOMParser().parseFromString(responseString, "text/html"))
 	}).catch((reason) => {
 		console.log("Failed to fetch role.html (report bug pls)", reason)
