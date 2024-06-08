@@ -24,6 +24,7 @@ const UNSORTED_ROLES = (() => {
 // Variables
 const roleContainer = assert(document.getElementById("role-container"))
 const role = assert(document.getElementById("role-template")).content.getElementById("role")
+const createRoleButton = assert(document.querySelector("button"))
 
 
 // Functions
@@ -77,6 +78,7 @@ async function createRole(name, alignment) {
 		Role: newRole,
 		RoleName: newRole.getElementsByClassName("role-name")[0],
 		RoleImage: newRole.getElementsByClassName("role-image")[0],
+		RemoveRoleButton: newRole.getElementsByClassName("remove-role")[0],
 
 		RandomizeButton: newRole.getElementsByClassName("role-button randomize")[0],
 		LockButton: newRole.getElementsByClassName("role-button lock")[0],
@@ -209,6 +211,10 @@ function addRole(role) {
 		role.LockButton.dataset.enabled = role.LockButton.dataset.enabled === "true" ? "false" : "true"
 	}
 
+	role.RemoveRoleButton.onclick = function() {
+		role.Role.remove()
+	}
+
 	role.RoleName.onchange = () => (shrinkTextOnOverflow(role.RoleName))
 	role.RoleName.onkeypress = () => (shrinkTextOnOverflow(role.RoleName))
 	role.AlignmentName.onchange = () => (shrinkTextOnOverflow(role.AlignmentName))
@@ -216,6 +222,10 @@ function addRole(role) {
 	
 	roleContainer.appendChild(role.Role)
 	shrinkTextOnOverflow(role.AlignmentName)
+}
+
+createRoleButton.onclick = async function() {
+	addRole(await createRole("Bystander", "Innocent"))
 }
 
 async function createDefaultRoles() {

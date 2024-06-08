@@ -27,7 +27,10 @@
 		<div class="border"></div>
 		<div class="border-content">
 			<div class="role-container" id="role-container">
-				
+				<button class="insert role">
+					<img src="./Files/Plus.svg" alt="+" draggable="false" class="role-image">
+					<div>Add role</div>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -35,8 +38,12 @@
 	<template id="role-template">
 		<div class="role" id="role">
 			<input class="role-name" id="role-name" type="text" autocomplete="off" value="Role name" onclick="this.select()">
-			<img src="./Files/Roles/Placeholder.png" alt="Placeholder" onerror="this.src = './Files/Roles/Placeholder.png'"
-				class="role-image" id="role-image">
+			<div class="role-icon-container" id="role-icon-container">
+				<img src="./Files/Roles/Placeholder.png" alt="Placeholder" onerror="this.src = './Files/Roles/Placeholder.png'"
+					class="role-image" id="role-image" draggable="false">
+				<button class="remove-role" id="remove-role"><img src="./Files/Roles/Placeholder.png" alt="Remove role" draggable="false"></button>
+			</div>
+			
 			<div class="role-buttons" id="role-buttons">
 				<button class="role-button randomize" id="randomize"></button>
 				<button class="role-button lock" id="lock" data-enabled="false"></button>
