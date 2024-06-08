@@ -23,7 +23,6 @@ const UNSORTED_ROLES = (() => {
 
 // Variables
 const roleContainer = assert(document.getElementById("role-container"))
-// const role = await getRole()
 const role = assert(document.getElementById("role-template")).content.getElementById("role")
 
 
@@ -69,20 +68,6 @@ async function shrinkTextOnOverflow(element) {
 
 	element.dataset.fontSize = currentFontSize + 'px'
 	element.dataset.isShrinking = false
-}
-
-async function getRole() {
-	const fetchPromise = new Promise(async (resolve) => {
-		const responseString = await fetch("./Prefabs/Role/Role.html").then((response) => (response.text()))
-		resolve(new DOMParser().parseFromString(responseString, "text/html"))
-	}).catch((reason) => {
-		console.log("Failed to fetch role.html (report bug pls)", reason)
-	})
-
-	const doc = await fetchPromise
-	const role = doc.getElementById("role")
-
-	return role
 }
 
 async function createRole(name, alignment) {

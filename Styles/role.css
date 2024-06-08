@@ -45,6 +45,14 @@
 	background-color: red;
 }
 
+#randomize::after {
+	content: "🎲";
+}
+
+#lock::after {
+	content: "🔒";
+}
+
 #randomize, #lock {
 	height: 3.75em;
 	width: 3.75em;
