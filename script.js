@@ -221,7 +221,6 @@ function addRole(role) {
 	role.LockButton.onclick = function() {
 		role.Locked = !role.Locked
 		role.LockButton.dataset.enabled = role.LockButton.dataset.enabled === "true" ? "false" : "true"
-		// role.LockButton.style = role.Locked ? "background-color: red" : ""
 	}
 
 	role.RoleName.onchange = () => (shrinkTextOnOverflow(role.RoleName))
