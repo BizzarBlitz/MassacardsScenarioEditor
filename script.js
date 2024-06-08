@@ -3,19 +3,27 @@
 
 // Modules
 import assert from "./Modules/assert.mjs"
+import randomElement from "./Modules/randomElement.mjs"
 
 // Assets
 const ALIGNMENTS = (await fetch("./Modules/alignments.json").then((response) => (response.json()))).alignments
+const ROLES = await fetch("./Modules/roles.json").then((response) => (response.json()))
+
+const UNSORTED_ROLES = (() => {
+	let unsortedRoles = []
+
+	for (const [_, roles] of Object.entries(ROLES)) {
+		unsortedRoles = unsortedRoles.concat(roles)
+	}
+
+	return unsortedRoles
+})()
 
 
-
-
-// Constants
-const PLACEHOLDER_IMAGE = "https://static.miraheze.org/massacardswiki/4/47/Placeholder.png"
 
 // Variables
 const roleContainer = assert(document.getElementById("role-container"))
-const role = getRole()
+const role = await getRole()
 
 
 // Functions
@@ -41,7 +49,6 @@ async function shrinkTextOnOverflow(element) {
 	element.dataset.isShrinking = true
 
 	const initialValue = element.value
-	console.log("shrinking", initialValue)
 
 	// await delayedIsOverflown(element)
 
@@ -61,7 +68,6 @@ async function shrinkTextOnOverflow(element) {
 
 	element.dataset.fontSize = currentFontSize + 'px'
 	element.dataset.isShrinking = false
-	console.log("finished shrinking", initialValue)
 }
 
 async function getRole() {
@@ -79,7 +85,7 @@ async function getRole() {
 }
 
 async function createRole(name, alignment) {
-	const newRole = (await role).cloneNode(true)
+	const newRole = role.cloneNode(true)
 
 	const roleStruct = {
 		Role: newRole,
@@ -141,13 +147,15 @@ function updateRoleAlignment(role, alignment, wasAlignmentValid) {
 	shrinkTextOnOverflow(role.AlignmentName)
 }
 
+function getRandomRoleName(alignment) {
+	return randomElement(alignment === "Unknown" ? UNSORTED_ROLES : ROLES[alignment])
+}
+
 function randomizeRole(role, bypassLock) {
 	if (role.Locked && !bypassLock) return
 	
-	const roleName = "Killer" // TODO: Choose random role based on alignment (probably requires a roles.json file)
-	updateRoleName(role, roleName, true)
+	updateRoleName(role, getRandomRoleName(role.Alignment), true)
 }
-
 
 function addRole(role) {
 	role.RoleName.addEventListener("keydown", function(event) {
@@ -212,7 +220,8 @@ function addRole(role) {
 
 	role.LockButton.onclick = function() {
 		role.Locked = !role.Locked
-		role.LockButton.style = role.Locked ? "background-color: red" : ""
+		role.LockButton.dataset.enabled = role.LockButton.dataset.enabled === "true" ? "false" : "true"
+		// role.LockButton.style = role.Locked ? "background-color: red" : ""
 	}
 
 	role.RoleName.onchange = () => (shrinkTextOnOverflow(role.RoleName))
