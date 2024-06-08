@@ -23,7 +23,8 @@ const UNSORTED_ROLES = (() => {
 
 // Variables
 const roleContainer = assert(document.getElementById("role-container"))
-const role = await getRole()
+// const role = await getRole()
+const role = assert(document.getElementById("role-template")).content.getElementById("role")
 
 
 // Functions
