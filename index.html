@@ -2,6 +2,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Quickly edit Massacards scenarios">
 	
 	<link rel="stylesheet" href="./reset.css">
 	<link rel="stylesheet" href="./style.css">
@@ -13,21 +14,32 @@
 <body>
 	<header>
 		<nav class="topbar">
-			<span class="title abs">Massacards Scenario Editor<!--Secret 🤫--></span>
+			<span class="title abs">Massacards Scenario Editor</span>
 			<a href="https://github.com/BizzarBlitz/MassacardsScenarioEditor">
 				<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Github">
 			</a>
 		</nav>
 	</header>
 	
-	A tool for quickly editing <a href="https://massacremansionoff.wixsite.com/massacards">Massacards</a> role combinations<br>
-	Developed by BizzarBlitz
+	<div class="subtitle">A tool for quickly editing <a href="https://massacremansionoff.wixsite.com/massacards">Massacards</a> role combinations<br>
+	Developed by BizzarBlitz</div>
+
+	<hr>
+
+	<div class="randomize-container">
+		<button class="randomize-scenario" id="randomize-scenario">
+			<span>Randomize All</span>
+			<img src="./Files/Die.png" alt="Randomize scenario"> <!-- Programmer art :( -->
+		</button>
+	</div>
+
+	
 
 	<div class="border-container" id="scenario-border-container" style="width: 90%; margin: auto;">
 		<div class="border"></div>
 		<div class="border-content">
 			<div class="role-container" id="role-container">
-				<button class="insert role">
+				<button class="insert role" id="insert-role">
 					<img src="./Files/Plus.svg" alt="+" draggable="false" class="role-image">
 					<div>Add role</div>
 				</button>
@@ -41,7 +53,10 @@
 			<div class="role-icon-container" id="role-icon-container">
 				<img src="./Files/Roles/Placeholder.png" alt="Placeholder" onerror="this.src = './Files/Roles/Placeholder.png'"
 					class="role-image" id="role-image" draggable="false">
-				<button class="remove-role" id="remove-role"><img src="./Files/Roles/Placeholder.png" alt="Remove role" draggable="false"></button>
+				<div class="role-icon-buttons">
+					<button class="remove-role" id="remove-role"><img src="./Files/Roles/Placeholder.png" alt="Remove role" draggable="false"></button>
+					<button class="duplicate-role" id="duplicate-role"><img src="./Files/Roles/Placeholder.png" alt="Duplicate role" draggable="false"></button>
+				</div>
 			</div>
 			
 			<div class="role-buttons" id="role-buttons">
