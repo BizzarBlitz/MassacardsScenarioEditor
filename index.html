@@ -33,7 +33,7 @@
 		</button>
 	</div>
 
-	
+	<input class="scenario-name" id="scenario-name" type="text" autocomplete="off" value="Scenario name" onclick="this.select()">
 
 	<div class="border-container" id="scenario-border-container" style="width: 90%; margin: auto;">
 		<div class="border"></div>
@@ -47,8 +47,10 @@
 		</div>
 	</div>
 
+	<!-- Templates -->
+
 	<template id="role-template">
-		<div class="role" id="role">
+		<div class="role" id="role" draggable="true">
 			<input class="role-name" id="role-name" type="text" autocomplete="off" value="Role name" onclick="this.select()">
 			<div class="role-icon-container" id="role-icon-container">
 				<img src="./Files/Roles/Placeholder.png" alt="Placeholder" onerror="this.src = './Files/Roles/Placeholder.png'"
@@ -64,7 +66,7 @@
 				<button class="role-button lock" id="lock" data-enabled="false"></button>
 				<div class="role-button" id="alignment">
 					<img src="./Files/ArrowLeft.svg" class="arrow left-arrow" id="left-arrow" alt="Left">
-					<img src="./Files/Alignments/Innocent.png" alt="Alignment" class="alignment-image">
+					<img src="./Files/Alignments/Unknown.png" alt="Alignment" class="alignment-image">
 					<img src="./Files/ArrowLeft.svg" class="arrow right-arrow" id="right-arrow" alt="Right">
 					<input type="text" autocomplete="off" class="alignment-name" id="alignment-name" value="Alignment name" onclick="this.select()">
 				</div>

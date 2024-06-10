@@ -101,6 +101,13 @@ button:hover, role-button:hover {
 	background-color: rgba(255, 0, 0, 0.375);
 }
 
+.scenario-name {
+	font-size: 2em;
+	text-align: center;
+	border: none;
+	width: 90%;
+}
+
 .abs {
 	position: absolute;
 	transform: translateX(-50%);
