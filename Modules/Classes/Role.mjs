@@ -26,6 +26,20 @@ const RoleNode = assert(document.getElementById("role-template")).content.getEle
 
 
 
+// Functions
+
+function roleDragStart() {
+	this.classList.add("dragging")
+}
+
+function roleDragEnd() {
+	this.classList.remove("dragging")
+}
+
+
+
+// Class
+
 export default class Role {
 	static AddedRoles = []
 
@@ -74,6 +88,8 @@ export default class Role {
 
 		this.Elements = {
 			Role: newRoleNode,
+			DragDetector: newRoleNode.getElementsByClassName("drag-detector")[0],
+
 			RoleName: newRoleNode.getElementsByClassName("role-name")[0],
 			RoleImage: newRoleNode.getElementsByClassName("role-image")[0],
 
@@ -225,6 +241,9 @@ export default class Role {
 		this.Elements.RoleName.onkeypress = () => (fitText(thisRole.Elements.RoleName))
 		this.Elements.AlignmentName.onchange = () => (fitText(thisRole.Elements.AlignmentName))
 		this.Elements.AlignmentName.onkeypress = () => (fitText(thisRole.Elements.AlignmentName))
+
+		this.Elements.Role.addEventListener("dragstart", roleDragStart)
+		this.Elements.Role.addEventListener("dragend", roleDragEnd)
 
 		this.updateRoleName(this.Name, true)
 		this.updateRoleAlignment(this.Alignment, true)

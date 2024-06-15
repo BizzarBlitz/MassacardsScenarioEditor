@@ -39,13 +39,38 @@ const randomizationSettings = {
 
 // Functions
 
+function getRoleAfterMouse(mouseX, mouseY) {
+	const draggableElements = [...Role.AddedRoles]
+	removeItem(draggableElements, document.querySelector(".dragging"))
+
+	return draggableElements.reduce((closest, role) => {
+		const rect = role.Elements.Role.getBoundingClientRect()
+		const offsetX = mouseX - rect.left - rect.width/2
+		const offsetY = mouseY - rect.top - rect.height / 2
+		
+		if (offsetX < 0 && offsetX > closest.offset) {
+			return {offset: offsetX, role: role}
+		} else {return closest}
+	}, {offset: Number.NEGATIVE_INFINITY}).role
+}
+
+function roleContainerDragOver(event) {
+	event.preventDefault()
+
+	const afterElement = getRoleAfterMouse(event.clientX, event.clientY)
+	const draggingElement = document.querySelector(".dragging")
+
+	if (afterElement) roleContainer.insertBefore(draggingElement, afterElement.Elements.Role)
+	else roleContainer.appendChild(draggingElement)
+}
+
 randomizeScenarioButton.onclick = function() {
 	for (const role of Role.AddedRoles) {
 		role.randomize()
 	}
 }
 
-createRoleButton.onclick = async function() {
+createRoleButton.onclick = function() {
 	if (!Role.AddedRoles.find((role) => (role.Name === "Killer" || role.Name === "Massacre"))) new Role("Killer", "Murderous").add(roleContainer)
 	else if (!Role.AddedRoles.find((role) => (role.Name === "Private Eye" || role.Name === "Hero"))) new Role("Private Eye", "Dark Innocent").add(roleContainer)
 	else if (!Role.AddedRoles.find((role) => (role.Name === "Witness"))) new Role("Witness", "Innocent").add(roleContainer)
@@ -92,3 +117,5 @@ if (UrlSearchParams.has("roles")) {
 } else {
 	createDefaultRoles()
 }
+
+roleContainer.addEventListener("dragover", roleContainerDragOver)

@@ -27,9 +27,14 @@
 	margin: 0.5em;
 	
 	display: grid;
+	position: relative;
 	width: 10em;
 	padding: 1em;
 	padding-top: 0.5em; /* So role name looks more centered */
+}
+
+.dragging {
+	opacity: 50%;
 }
 
 .role-name {
