@@ -9,6 +9,8 @@ import removeItem from "../removeItem.mjs"
 
 // Constants
 
+const FILE_PREFIX = "./Files/"
+
 const ALIGNMENTS = (await fetch("./Modules/alignments.json").then((response) => (response.json()))).alignments
 const ROLES = await fetch("./Modules/roles.json").then((response) => (response.json()))
 
@@ -119,7 +121,7 @@ export default class Role {
 
 	updateRoleName(name, wasNameValid) {
 		this.Elements.RoleName.value = wasNameValid ? name : "Invalid role"
-		this.Elements.RoleImage.src = `../../Files/Roles/${name}.png`
+		this.Elements.RoleImage.src = FILE_PREFIX + `Roles/${name}.png`
 		this.Elements.RoleImage.alt = name
 
 		this.Name = name
@@ -132,7 +134,7 @@ export default class Role {
 		let roleName = this.Elements.RoleName.value
 		let validRoleName = true
 
-		fetch(`../../Files/Roles/${roleName}.png`).then(function(response) {
+		fetch(FILE_PREFIX + `Roles/${roleName}.png`).then(function(response) {
 			if (response.status === 404) {
 				// Invalid role name
 				console.warn("Invalid role name:", roleName)
@@ -156,7 +158,7 @@ export default class Role {
 			fitText(this.Elements.AlignmentName)
 		}, 1000)
 		
-		this.Elements.AlignmentImage.src = `../../Files/Alignments/${alignment}.png`
+		this.Elements.AlignmentImage.src = FILE_PREFIX + `/Alignments/${alignment}.png`
 		this.Elements.AlignmentImage.alt = alignment
 
 		this.Alignment = alignment
@@ -172,7 +174,7 @@ export default class Role {
 		let alignmentName = this.Elements.AlignmentName.value
 		let validAlignmentName = true
 
-		fetch(`../../Files/Alignments/${alignmentName}.png`).then(function (response) {
+		fetch(FILE_PREFIX + `Alignments/${alignmentName}.png`).then(function (response) {
 			if (response.status === 404) {
 				// Invalid alignment name
 				console.warn("Invalid alignment name:", alignmentName)
@@ -188,7 +190,7 @@ export default class Role {
 		alignment ??= this.Alignment
 
 		this.Elements.RoleName.value = "Any " + (alignment === "Unknown" ? "Role" : alignment)
-		this.Elements.RoleImage.src = `../../Files/Alignments/${alignment}.png`
+		this.Elements.RoleImage.src = FILE_PREFIX + `Alignments/${alignment}.png`
 
 		fitText(this.Elements.RoleName)
 	}
