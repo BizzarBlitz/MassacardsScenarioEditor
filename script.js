@@ -40,27 +40,70 @@ const randomizationSettings = {
 // Functions
 
 function getRoleAfterMouse(mouseX, mouseY) {
-	const draggableElements = [...Role.AddedRoles]
-	removeItem(draggableElements, document.querySelector(".dragging"))
+	const roles = [...Role.AddedRoles]
 
-	return draggableElements.reduce((closest, role) => {
+	// Find closest role on X axis
+	let closestHorizontalRoles = []
+	let closestOffsetX = Number.NEGATIVE_INFINITY // Aiming for closest to 0
+	
+	roles.forEach((role) => {
 		const rect = role.Elements.Role.getBoundingClientRect()
-		const offsetX = mouseX - rect.left - rect.width/2
+		const offsetX = mouseX - rect.left - rect.width / 2
 		const offsetY = mouseY - rect.top - rect.height / 2
-		
-		if (offsetX < 0 && offsetX > closest.offset) {
-			return {offset: offsetX, role: role}
-		} else {return closest}
-	}, {offset: Number.NEGATIVE_INFINITY}).role
+
+		const isRoleAfter = offsetX < 0
+		if (!isRoleAfter) return // Note return acts like continue inside forEach
+
+		if (offsetX === closestOffsetX) {
+			closestHorizontalRoles.push({
+				Role: role,
+				OffsetX: offsetX,
+				OffsetY: offsetY,
+			})
+		}
+		else if (offsetX > closestOffsetX) {
+			closestOffsetX = offsetX
+
+			closestHorizontalRoles = [{
+				Role: role,
+				OffsetX: offsetX,
+				OffsetY: offsetY,
+			}]
+		}
+	})
+
+	// Find closest role on Y axis
+	let closestVerticalRole = closestHorizontalRoles[0]
+	let closestOffsetY = Number.NEGATIVE_INFINITY
+
+	closestHorizontalRoles.forEach((role) => {
+		const isRoleAfter = role.OffsetY < 0
+		if (!isRoleAfter) return // Note return acts like continue inside forEach
+
+		if (role.OffsetY > closestOffsetY) {
+			closestOffsetY = role.OffsetY
+			closestVerticalRole = role
+		}
+	})
+
+	if (!closestVerticalRole) {
+		closestHorizontalRoles.forEach((role) => {
+			if (!closestVerticalRole || closestVerticalRole.OffsetY > role.OffsetY) {
+				closestVerticalRole = role
+			}
+		})
+	}
+
+	return closestVerticalRole?.Role
 }
 
 function roleContainerDragOver(event) {
 	event.preventDefault()
 
-	const afterElement = getRoleAfterMouse(event.clientX, event.clientY)
+	const afterRole = getRoleAfterMouse(event.clientX, event.clientY)
 	const draggingElement = document.querySelector(".dragging")
 
-	if (afterElement) roleContainer.insertBefore(draggingElement, afterElement.Elements.Role)
+	if (afterRole) roleContainer.insertBefore(draggingElement, afterRole.Elements.Role)
 	else roleContainer.appendChild(draggingElement)
 }
 

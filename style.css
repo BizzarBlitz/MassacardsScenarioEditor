@@ -1,6 +1,8 @@
 :root {
 	--border-image: "https://static.miraheze.org/massacardswiki/4/46/Border.png";
 	--border-scale-factor: 5;
+	scrollbar-color: red black;
+	scrollbar-width: thin;
 }
 
 body {
@@ -17,14 +19,21 @@ input {
 	color: white;
 }
 
+button {
+	cursor: pointer;
+}
+
 a {
 	color: red;
 }
 
 header {
 	height: 4rem;
+	width: 100%;
 	padding: 0.2rem;
 	background-color: red;
+	position: sticky;
+	top: 0;
 
 	& img {
 		filter: brightness(0);

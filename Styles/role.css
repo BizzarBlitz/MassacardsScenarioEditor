@@ -7,6 +7,7 @@
 	background: none;
 	color: white;
 	padding-top: 1em;
+	cursor: pointer;
 
 	& img {
 		margin-top: 1rem; /* Space that role-name usually occupies */
@@ -31,10 +32,12 @@
 	width: 10em;
 	padding: 1em;
 	padding-top: 0.5em; /* So role name looks more centered */
+	cursor: grab;
 }
 
 .dragging {
 	opacity: 50%;
+	cursor: grabbing;
 }
 
 .role-name {
@@ -156,6 +159,7 @@
 		height: 100%;
 		width: 1em;
 		padding: 1px;
+		cursor: pointer;
 	}
 
 	& img:hover {

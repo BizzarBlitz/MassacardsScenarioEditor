@@ -204,7 +204,7 @@ export default class Role {
 		const newRole = new Role(this.Name, this.Alignment)
 
 		newRole.Locked = this.Locked
-		newRole.add(assert(this.Elements.Container, "Attempt to duplicate role outside container"))
+		newRole.add(assert(this.Elements.Container, "Attempt to duplicate role outside container"), this.Elements.Role.nextSibling)
 	}
 
 	randomize(bypassLock, randomizationSettings) {
@@ -213,7 +213,7 @@ export default class Role {
 		this.updateRoleName(Role.getRandomRoleName(this.Alignment, randomizationSettings), true)
 	}
 
-	add(container) {
+	add(container, before) {
 		const thisRole = this
 
 		this.Elements.RoleName.addEventListener("keydown", function(event) {
@@ -249,7 +249,7 @@ export default class Role {
 		this.updateRoleAlignment(this.Alignment, true)
 
 		this.Elements.Container = container
-		container.appendChild(this.Elements.Role)
+		container.insertBefore(this.Elements.Role, before)
 		Role.AddedRoles.push(this)
 	}
 
