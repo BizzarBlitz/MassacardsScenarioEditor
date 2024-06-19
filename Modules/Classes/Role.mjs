@@ -9,7 +9,7 @@ import removeItem from "../removeItem.mjs"
 
 // Constants
 
-const FILE_PREFIX = "./Files/"
+const FILE_PREFIX = "./Images/"
 
 const ALIGNMENTS = (await fetch("./Modules/alignments.json").then((response) => (response.json()))).alignments
 const ROLES = await fetch("./Modules/roles.json").then((response) => (response.json()))
@@ -100,6 +100,7 @@ export default class Role {
 
 			RandomizeButton: newRoleNode.getElementsByClassName("role-button randomize")[0],
 			LockButton: newRoleNode.getElementsByClassName("role-button lock")[0],
+			LockButtonImage: newRoleNode.getElementsByClassName("role-button-image lock")[0],
 
 			AlignmentName: newRoleNode.getElementsByClassName("alignment-name")[0],
 			AlignmentImage: newRoleNode.getElementsByClassName("alignment-image")[0],
@@ -111,6 +112,8 @@ export default class Role {
 			set(locked) {
 				this.#Locked = locked
 				thisRole.Elements.LockButton.dataset.enabled = locked ? "true" : "false"
+				thisRole.Elements.LockButtonImage.src = FILE_PREFIX + "Icons/" + (locked ? "Locked.png" : "Unlocked.png")
+				thisRole.Elements.LockButtonImage.alt = locked ? "Locked" : "Unlocked"
 			},
 
 			get() {

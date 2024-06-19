@@ -6,29 +6,22 @@ import Role from "./Modules/Classes/Role.mjs"
 
 import assert from "./Modules/assert.mjs"
 import fitText from "./Modules/fitText.mjs"
-import randomElement from "./Modules/randomElement.mjs"
-import removeItem from "./Modules/removeItem.mjs"
-
-// Assets
-const ALIGNMENTS = (await fetch("./Modules/alignments.json").then((response) => (response.json()))).alignments
-const ROLES = await fetch("./Modules/roles.json").then((response) => (response.json()))
-
-const UNSORTED_ROLES = (() => {
-	let unsortedRoles = []
-
-	for (const [_, roles] of Object.entries(ROLES)) {
-		unsortedRoles = unsortedRoles.concat(roles)
-	}
-
-	return unsortedRoles
-})()
 
 
 
 // Variables
 const UrlSearchParams = new URLSearchParams(window.location.search)
 
+const ShareRoleNode = assert(document.getElementById("share-role-template")).content.getElementById("share-role")
+
+const shareButton = assert(document.getElementById("share"))
+const shareModal = assert(document.getElementById("share-modal"))
+const closeShareModalButton = assert(document.getElementById("close-share"))
+const shareScenarioName = assert(document.getElementById("share-scenario-name"))
+const shareScenario = assert(document.getElementById("share-scenario"))
+
 const randomizeScenarioButton = assert(document.getElementById("randomize-scenario"))
+const scenarioName = assert(document.getElementById("scenario-name"))
 const roleContainer = assert(document.getElementById("role-container"))
 const createRoleButton = assert(document.getElementById("insert-role"))
 
@@ -152,6 +145,50 @@ function createUriRolesComponent(roles) {
 	return "?roles=" + encodeURIComponent(uriComponent)
 }
 
+function openShareModal() {
+	shareScenarioName.textContent = scenarioName.value
+
+	for (const role of roleContainer.children) {
+		if (role.id === "insert-role") continue
+
+		const roleName = role.getElementsByClassName("role-name")[0]
+		const roleImage = role.getElementsByClassName("role-image")[0]
+
+		const shareRole = ShareRoleNode.cloneNode(true)
+		const shareRoleName = shareRole.getElementsByClassName("share-role-name")[0]
+		const shareRoleImage = shareRole.getElementsByClassName("share-role-image")[0]
+
+		shareRoleName.textContent = roleName.value
+		shareRoleImage.src = roleImage.src
+		shareRoleImage.alt = roleImage.alt
+
+		shareScenario.appendChild(shareRole)
+	}
+	
+	shareModal.showModal()
+}
+
+function closeShareModal(event) {
+	if (event.target !== event.currentTarget) return
+
+	shareModal.close()
+
+	// Remove roles
+	while (shareScenario.firstChild) {
+		shareScenario.removeChild(shareScenario.lastChild);
+	}
+}
+
+
+
+// Event Listeners
+
+shareButton.onclick = openShareModal
+shareModal.onclick = closeShareModal
+closeShareModalButton.onclick = closeShareModal
+roleContainer.addEventListener("dragover", roleContainerDragOver)
+
+
 
 // Initialization
 
@@ -160,5 +197,3 @@ if (UrlSearchParams.has("roles")) {
 } else {
 	createDefaultRoles()
 }
-
-roleContainer.addEventListener("dragover", roleContainerDragOver)

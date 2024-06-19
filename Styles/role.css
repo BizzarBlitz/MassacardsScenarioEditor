@@ -7,7 +7,6 @@
 	background: none;
 	color: white;
 	padding-top: 1em;
-	cursor: pointer;
 
 	& img {
 		margin-top: 1rem; /* Space that role-name usually occupies */
@@ -113,6 +112,13 @@
 	transition-property: background-color;
 	transition-duration: 0.25s;
 	transition-timing-function: linear;
+
+	& img {
+		padding: 0.25em;
+		transition-property: filter;
+		transition-duration: 0.25s;
+		transition-timing-function: linear;
+	}
 }
 
 .role-button:hover {
@@ -121,20 +127,26 @@
 
 .role-button[data-enabled="true"] {
 	background-color: red;
-}
 
-#randomize::after {
-	content: "🎲";
-}
-
-#lock::after {
-	content: "🔒";
+	& img {
+		filter: invert(100%);
+	}
 }
 
 #randomize, #lock {
 	height: 3.75em;
 	width: 3.75em;
 	margin-bottom: 0.5em;
+	padding: 0;
+
+	& img {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+#randomize > img {
+	padding: 0.5em;
 }
 
 #alignment {
@@ -159,11 +171,6 @@
 		height: 100%;
 		width: 1em;
 		padding: 1px;
-		cursor: pointer;
-	}
-
-	& img:hover {
-		filter: invert(0.25);
 	}
 
 	& img.alignment-image {
