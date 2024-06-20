@@ -6,6 +6,7 @@ import Role from "./Modules/Classes/Role.mjs"
 
 import assert from "./Modules/assert.mjs"
 import fitText from "./Modules/fitText.mjs"
+import uriParser from "./Modules/uriParser.mjs"
 
 
 
@@ -19,6 +20,7 @@ const shareModal = assert(document.getElementById("share-modal"))
 const closeShareModalButton = assert(document.getElementById("close-share"))
 const shareScenarioName = assert(document.getElementById("share-scenario-name"))
 const shareScenario = assert(document.getElementById("share-scenario"))
+const shareLinkButton = assert(document.getElementById("copy-link"))
 
 const randomizeScenarioButton = assert(document.getElementById("randomize-scenario"))
 const scenarioName = assert(document.getElementById("scenario-name"))
@@ -110,7 +112,7 @@ createRoleButton.onclick = function() {
 	if (!Role.AddedRoles.find((role) => (role.Name === "Killer" || role.Name === "Massacre"))) new Role("Killer", "Murderous").add(roleContainer)
 	else if (!Role.AddedRoles.find((role) => (role.Name === "Private Eye" || role.Name === "Hero"))) new Role("Private Eye", "Dark Innocent").add(roleContainer)
 	else if (!Role.AddedRoles.find((role) => (role.Name === "Witness"))) new Role("Witness", "Innocent").add(roleContainer)
-	else new Role("Bystander", "Innocent").add(roleContainer)
+	else new Role("Bystander", "Unknown").add(roleContainer)
 }
 
 function createDefaultRoles() {
@@ -127,43 +129,41 @@ function createDefaultRoles() {
 	witness.add(roleContainer)
 }
 
-function createRolesFromUriComponent(rolesString) {
-	const roles = rolesString.split("_")
-
-	for (const roleName of roles) {
-		new Role(roleName, Role.getAlignmentFromRoleName(roleName)).add(roleContainer)
-	}
-}
-
-function createUriRolesComponent(roles) {
-	let uriComponent = ""
-
-	for (const role of roles) {
-		uriComponent = uriComponent.concat(role.Name + "_")
-	}
-
-	return "?roles=" + encodeURIComponent(uriComponent)
-}
-
 function openShareModal() {
 	shareScenarioName.textContent = scenarioName.value
 
-	for (const role of roleContainer.children) {
-		if (role.id === "insert-role") continue
-
-		const roleName = role.getElementsByClassName("role-name")[0]
-		const roleImage = role.getElementsByClassName("role-image")[0]
-
+	for (const role of Role.getOrderedRoles(roleContainer)) {
 		const shareRole = ShareRoleNode.cloneNode(true)
 		const shareRoleName = shareRole.getElementsByClassName("share-role-name")[0]
 		const shareRoleImage = shareRole.getElementsByClassName("share-role-image")[0]
 
-		shareRoleName.textContent = roleName.value
-		shareRoleImage.src = roleImage.src
-		shareRoleImage.alt = roleImage.alt
+		shareRoleName.textContent = role.Elements.RoleName.value
+		shareRoleImage.src = role.Elements.RoleImage.src
+		shareRoleImage.alt = role.Elements.RoleImage.alt
 
 		shareScenario.appendChild(shareRole)
 	}
+
+	// TODO: Make scenario a canvas/image (like tiermaker does) (https://reference.codeproject.com/dom/canvas_api/drawing_dom_objects_into_a_canvas)
+
+	// const canvasContext = assert(document.getElementById("test-canvas")).getContext("2d")
+	// const newDoc = document.implementation.createHTMLDocument("canvasDoc")
+	// newDoc.write(shareScenario.outerHTML)
+	// newDoc.documentElement.setAttribute("xmlns", assert(newDoc.documentElement.namespaceURI, "namespaceURI not found on new document"))
+
+	// const html = (new XMLSerializer).serializeToString(newDoc)
+	// const DOMURL = window.URL
+
+	// const img = new Image()
+	// const svg = new Blob([html], { type: 'image/svg+xml;charset=utf-8' })
+	// const url = DOMURL.createObjectURL(svg)
+
+	// img.onload = function () {
+	// 	canvasContext.drawImage(img, 50, 50)
+	// 	DOMURL.revokeObjectURL(url)
+	// }
+
+	// img.src = // url
 	
 	shareModal.showModal()
 }
@@ -179,6 +179,13 @@ function closeShareModal(event) {
 	}
 }
 
+function copyShareLink() {
+	navigator.clipboard.writeText(window.location.origin + uriParser.ConcatenateComponents([
+		uriParser.Roles.Encode(Role.getOrderedRoles(roleContainer)),
+		uriParser.ScenarioName.Encode(scenarioName.value),
+	]))
+}
+
 
 
 // Event Listeners
@@ -186,14 +193,24 @@ function closeShareModal(event) {
 shareButton.onclick = openShareModal
 shareModal.onclick = closeShareModal
 closeShareModalButton.onclick = closeShareModal
+shareLinkButton.onclick = copyShareLink
 roleContainer.addEventListener("dragover", roleContainerDragOver)
 
 
 
 // Initialization
 
+// Url Params
 if (UrlSearchParams.has("roles")) {
-	createRolesFromUriComponent(UrlSearchParams.get("roles"))
+	const roles = uriParser.Roles.Decode(UrlSearchParams.get("roles"))
+
+	for (const role of roles) {
+		role.add(roleContainer)
+	}
 } else {
 	createDefaultRoles()
+}
+
+if (UrlSearchParams.has("name")) {
+	scenarioName.value = uriParser.ScenarioName.Decode(UrlSearchParams.get("name"))
 }

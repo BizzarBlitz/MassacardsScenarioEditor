@@ -79,6 +79,23 @@ export default class Role {
 		return randomElement(rolePool)
 	}
 
+	static getOrderedRoles(container) {
+		const roles = []
+		
+		for (const roleElement of container.children) {
+			if (roleElement.id === "insert-role") continue
+
+			for (const role of Role.AddedRoles) {
+				if (role.Elements.Role === roleElement) {
+					roles.push(role)
+					break
+				}
+			}
+		}
+
+		return roles
+	}
+
 	constructor(name, alignment) {
 		const thisRole = this
 		const newRoleNode = RoleNode.cloneNode(true)

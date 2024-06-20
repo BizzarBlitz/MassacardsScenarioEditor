@@ -1,3 +1,5 @@
+/* Elements */
+
 :root {
 	--border-image: "https://static.miraheze.org/massacardswiki/4/46/Border.png";
 	--border-scale-factor: 5;
@@ -50,9 +52,75 @@ nav {
 	justify-content: right;
 }
 
+button, role-button {
+	border: 0.125em solid red;
+	background-color: rgba(255, 0, 0, 0);
+	color: white;
+	transition-property: background-color;
+	transition-duration: 0.25s;
+	transition-timing-function: linear;
+}
+
+button:hover, role-button:hover {
+	background-color: rgba(255, 0, 0, 0.375);
+}
+
+/* General Classes */
+
 .thick-border {
 	border: 0.5em solid red;
 }
+
+.sink-input {
+	position: absolute;
+	width: calc(100% + 1em);
+	height: calc(100% + 1em);
+	left: -0.5em;
+	top: -0.5em;
+	z-index: -1;
+}
+
+.abs {
+	position: absolute;
+	transform: translateX(-50%);
+}
+
+.dim-on-hover {
+	transition-property: filter;
+	transition-duration: 0.25s;
+	transition-timing-function: linear;
+}
+
+.dim-on-hover:hover {
+	filter: invert(45%);
+}
+
+.border-container {
+	display: grid;
+}
+
+.border, .border-content {
+	grid-row: 1;
+	grid-column: 1;
+}
+
+.border {
+	z-index: -1;
+	/* Display border under any actual content */
+
+	border-style: solid;
+	border-width:
+		calc(9px * var(--border-scale-factor)) calc(20px * var(--border-scale-factor)) calc(3px * var(--border-scale-factor)) calc(3px * var(--border-scale-factor));
+	border-image-source: url("https://static.miraheze.org/massacardswiki/4/46/Border.png");
+	border-image-slice: 144 320 48 48;
+	/* Don't ask how i got these numbers i forgor */
+}
+
+.border-content {
+	border: calc(2px * var(--border-scale-factor)) solid transparent;
+}
+
+/* Specific elements */
 
 .title {
 	font-size: 3em;
@@ -67,7 +135,7 @@ nav {
 }
 
 .randomize-container {
-	width: 90%;
+	width: fit-content;
 	height: 12rem;
 	margin: 0 auto 2.5em;
 	padding: 1em;
@@ -92,19 +160,6 @@ nav {
 		height: calc(100% - 1.5em);
 		margin: auto;
 	}
-}
-
-button, role-button {
-	border: 0.125em solid red;
-	background-color: rgba(255, 0, 0, 0);
-	color: white;
-	transition-property: background-color;
-	transition-duration: 0.25s;
-	transition-timing-function: linear;
-}
-
-button:hover, role-button:hover {
-	background-color: rgba(255, 0, 0, 0.375);
 }
 
 .scenario-name-container {
@@ -136,64 +191,6 @@ button:hover, role-button:hover {
 	background: initial;
 }
 
-dialog {
-	margin: auto;
-	width: 80%;
-	height: 75%;
-	background-color: inherit;
-	color: white;
-	border: 0.5rem solid red;
-	overflow: hidden;
-}
-
-::backdrop {
-	background-color: black;
-	opacity: 75%;
-}
-
-.sink-input {
-	position: absolute;
-	width: calc(100% + 1em);
-	height: calc(100% + 1em);
-	left: -0.5em;
-	top: -0.5em;
-	z-index: -1;
-}
-
-.close-share {
-	position: absolute;
-	right: 0.5em;
-	top: 0.5em;
-	height: 2.5em;
-}
-
-.share-scenario-name {
-	display: block;
-	font-size: 1.75em;
-	width: 100%;
-	margin-bottom: 0.25em;
-}
-
-.share-role {
-	width: 8em;
-	margin: 0.5em;
-}
-
-.abs {
-	position: absolute;
-	transform: translateX(-50%);
-}
-
-.dim-on-hover {
-	transition-property: filter;
-	transition-duration: 0.25s;
-	transition-timing-function: linear;
-}
-
-.dim-on-hover:hover {
-	filter: invert(45%);
-}
-
 .role-container {
 	/* border: 1em solid red;
 	border-image: var(--border-image); */
@@ -202,30 +199,4 @@ dialog {
 	justify-content: center;
 	padding: 0.5em;
 	flex-wrap: wrap;
-}
-
-.border-container {
-	display: grid;
-}
-
-.border, .border-content {
-	grid-row: 1;
-	grid-column: 1;
-}
-
-.border {
-	z-index: -1; /* Display border under any actual content */
-	
-	border-style: solid;
-	border-width:
-		calc(9px * var(--border-scale-factor))
-		calc(20px * var(--border-scale-factor))
-		calc(3px * var(--border-scale-factor))
-		calc(3px * var(--border-scale-factor));
-	border-image-source: url("https://static.miraheze.org/massacardswiki/4/46/Border.png");
-	border-image-slice: 144 320 48 48; /* Don't ask how i got these numbers i forgor */
-}
-
-.border-content {
-	border: calc(2px * var(--border-scale-factor)) solid transparent;
 }

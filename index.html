@@ -4,13 +4,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Quickly edit Massacards scenarios">
 	
-	<link rel="stylesheet" href="./reset.css">
-	<link rel="stylesheet" href="./style.css">
+	<link rel="stylesheet" href="./Styles/reset.css">
+	<link rel="stylesheet" href="./Styles/style.css">
+	<link rel="stylesheet" href="./Styles/share.css">
 	<!-- Template stylesheets -->
 	<link rel="stylesheet" href="./Styles/role.css">
 
 	<title>Massacards Scenario Editor</title>
 </head>
+
 <body>
 	<header>
 		<nav class="topbar">
@@ -48,11 +50,17 @@
 		</div>
 	</div>
 
+	<!-- Share modal -->
+
 	<dialog class="share-modal thick-border" id="share-modal">
 		<div class="sink-input"></div>
 		<img src="./Images/Icons/X.png" alt="Close" draggable="false" class="close-share dim-on-hover button" id="close-share">
 		<div class="share-scenario-name" id="share-scenario-name">Scenario name</div>
 		<div class="role-container thick-border" id="share-scenario"></div>
+		<div class="share-buttons">
+			<button class="share-button" id="copy-link"><img class="dim-on-hover" src="./Images/Icons/Link.png" alt="Copy link" draggable="false"></button>
+			<!-- Soon... <button class="share-button" id="download-image"><img class="dim-on-hover" src="./Images/Roles/Placeholder.png" alt="Download image" draggable="false"></button> -->
+		</div>
 	</dialog>
 
 	<!-- Templates -->
