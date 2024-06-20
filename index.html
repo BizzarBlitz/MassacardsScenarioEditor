@@ -1,10 +1,110 @@
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Quickly edit Massacards scenarios">
+	
+	<link rel="stylesheet" href="./Styles/reset.css">
+	<link rel="stylesheet" href="./Styles/style.css">
+	<link rel="stylesheet" href="./Styles/share.css">
+	<!-- Template stylesheets -->
+	<link rel="stylesheet" href="./Styles/role.css">
+
+	<title>Massacards Scenario Editor</title>
 </head>
+
 <body>
-    <h1>This is a test, and also my first time using Git lol.</h1>
+	<header>
+		<nav class="topbar">
+			<span class="title abs">Massacards Scenario Editor</span>
+			<a href="https://github.com/BizzarBlitz/MassacardsScenarioEditor">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="Github">
+			</a>
+		</nav>
+	</header>
+	
+	<div class="subtitle">A tool for quickly editing <a href="https://massacremansionoff.wixsite.com/massacards">Massacards</a> role combinations<br>
+	Developed by BizzarBlitz</div>
+
+	<div class="randomize-container thick-border">
+		<button class="randomize-scenario" id="randomize-scenario">
+			<span>Randomize All</span>
+			<img src="./Images/Icons/Die.png" alt="Randomize scenario" draggable="false">
+		</button>
+	</div>
+
+	<div class="scenario-name-container">
+		<input class="scenario-name" id="scenario-name" type="text" autocomplete="off" value="Scenario name" onclick="this.select()">
+		<button class="dim-on-hover" id="share"><img src="./Images/Icons/Share.png" alt="Share" draggable="false"></buttton>
+	</div>
+	
+	<div class="border-container" id="scenario-border-container" style="width: 90%; margin: auto;">
+		<div class="border"></div>
+		<div class="border-content">
+			<div class="role-container" id="role-container">
+				<button class="insert role button" id="insert-role">
+					<img src="./Images/Icons/Plus.svg" alt="+" draggable="false" class="role-image">
+					<div>Add role</div>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Share modal -->
+
+	<dialog class="share-modal thick-border" id="share-modal">
+		<div class="sink-input"></div>
+		<img src="./Images/Icons/X.png" alt="Close" draggable="false" class="close-share dim-on-hover button" id="close-share">
+		<div class="share-scenario-name" id="share-scenario-name">Scenario name</div>
+		<div class="role-container thick-border" id="share-scenario"></div>
+		<div class="share-buttons">
+			<button class="share-button" id="copy-link"><img class="dim-on-hover" src="./Images/Icons/Link.png" alt="Copy link" draggable="false"></button>
+			<!-- Soon... <button class="share-button" id="download-image"><img class="dim-on-hover" src="./Images/Roles/Placeholder.png" alt="Download image" draggable="false"></button> -->
+		</div>
+	</dialog>
+
+	<!-- Templates -->
+
+	<template id="role-template">
+		<div class="role" id="role" draggable="true">
+			<input class="role-name" id="role-name" type="text" autocomplete="off" value="Role name" onclick="this.select()">
+			<div class="role-icon-container" id="role-icon-container">
+				<img src="./Images/Roles/Placeholder.png" alt="Placeholder" onerror="this.src = './Images/Roles/Placeholder.png'"
+					class="role-image" id="role-image" draggable="false">
+				<div class="role-icon-buttons">
+					<button class="remove-role dim-on-hover" id="remove-role"><img src="./Images/Icons/X.png" alt="Remove role" draggable="false"></button>
+					<button class="duplicate-role dim-on-hover" id="duplicate-role"><img src="./Images/Icons/Duplicate.png" alt="Duplicate role" draggable="false"></button>
+				</div>
+			</div>
+			
+			<div class="role-buttons" id="role-buttons">
+				<button class="role-button randomize" id="randomize">
+					<img src="./Images/Icons/Die.png" alt="Randomize" draggable="false" class="role-button-image randomize">
+				</button>
+				<button class="role-button lock" id="lock" data-enabled="false">
+					<img src="./Images/Icons/Unlocked.png" alt="Unlocked" draggable="false" class="role-button-image lock">
+				</button>
+				<div class="role-button" id="alignment">
+					<img src="./Images/Icons/ArrowLeft.svg" class="arrow left-arrow dim-on-hover button" id="left-arrow" alt="Left" draggable="false">
+					<img src="./Images/Alignments/Unknown.png" class="alignment-image dim-on-hover button" alt="Alignment" draggable="false">
+					<img src="./Images/Icons/ArrowLeft.svg" class="arrow right-arrow dim-on-hover button" id="right-arrow" alt="Right" draggable="false">
+					<input type="text" autocomplete="off" class="alignment-name" id="alignment-name" value="Alignment name" onclick="this.select()">
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template id="share-role-template">
+		<div class="share-role" id="share-role">
+			<div class="share-role-name" id="share-role-name">Placeholder</div>
+			<img src="./Images/Roles/Placeholder.png" alt="Placeholder" draggable="false" class="share-role-image" id="share-role-image">
+		</div>
+	</template>
 </body>
+
+
+
+<!-- Put scripts at bottom to fix preloading bugs -->
+<script src="./script.js" type="module"></script>
+
 </html>
