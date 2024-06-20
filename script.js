@@ -180,7 +180,7 @@ function closeShareModal(event) {
 }
 
 function copyShareLink() {
-	navigator.clipboard.writeText(window.location.origin + uriParser.ConcatenateComponents([
+	navigator.clipboard.writeText(window.location.href + uriParser.ConcatenateComponents([
 		uriParser.Roles.Encode(Role.getOrderedRoles(roleContainer)),
 		uriParser.ScenarioName.Encode(scenarioName.value),
 	]))
