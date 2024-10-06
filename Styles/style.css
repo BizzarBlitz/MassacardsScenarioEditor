@@ -37,11 +37,15 @@ header {
 	position: sticky;
 	z-index: 50;
 	top: 0;
+}
 
-	& img {
-		filter: brightness(0);
-		height: 100%;
-	}
+.topbar-icon-link {
+	height: 100%;
+}
+
+.topbar-icon {
+	filter: brightness(0);
+	height: 100%;
 }
 
 nav {
