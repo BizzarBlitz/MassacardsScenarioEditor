@@ -125,91 +125,91 @@ function openShareModal() {
 <template>
 	<div class="flex flex-row-reverse gap-2">
 		<IconButton name="Share" icon="images/icons/share.png" @click="openShareModal" />
-		<OptionsButton name="Randomize all" icon="../images/icons/randomize.png" :slot-count="4" @click="randomizeAll">
+		<OptionsButton name="Randomize all" icon="images/icons/randomize.png" :slot-count="4" @click="randomizeAll">
 			<ButtonOption
 				:name="`Allow duplicates: ${settings.randomizeRoles.allowDuplicates}`"
 				:options="[
-					{value: true, icon: '../images/icons/duplicatesOn.png'},
-					{value: false, icon: '../images/icons/duplicatesOff.png'},
+					{value: true, icon: 'images/icons/duplicatesOn.png'},
+					{value: false, icon: 'images/icons/duplicatesOff.png'},
 				]"
 				v-model="settings.randomizeRoles.allowDuplicates"
 			/>
 			<ButtonOption
 				:name="`Maintain alignments: ${settings.randomizeRoles.maintainAlignments}`"
 				:options="[
-					{value: true, icon: '../images/icons/maintainAlignmentsOn.png'},
-					{value: false, icon: '../images/icons/maintainAlignmentsOff.png'},
+					{value: true, icon: 'images/icons/maintainAlignmentsOn.png'},
+					{value: false, icon: 'images/icons/maintainAlignmentsOff.png'},
 				]"
 				v-model="settings.randomizeRoles.maintainAlignments"
 			/>
 			<ButtonOption
 				:name="`Preserve required roles: ${settings.randomizeRoles.preserveRequiredRoles}`"
 				:options="[
-					{value: true, icon: '../images/icons/roleCheck.png'},
-					{value: false, icon: '../images/icons/roleX.png'},
+					{value: true, icon: 'images/icons/roleCheck.png'},
+					{value: false, icon: 'images/icons/roleX.png'},
 				]"
 				v-model="settings.randomizeRoles.preserveRequiredRoles"
 			/>
 			<ButtonOption
 				:name="`Allow replaceable super roles: ${settings.randomizeRoles.allowReplaceableSuperRoles}`"
 				:options="[
-					{value: true, icon: '../images/icons/allowSuperRoles.png'},
-					{value: false, icon: '../images/icons/disallowSuperRoles.png'},
+					{value: true, icon: 'images/icons/allowSuperRoles.png'},
+					{value: false, icon: 'images/icons/disallowSuperRoles.png'},
 				]"
 				v-model="settings.randomizeRoles.allowReplaceableSuperRoles"
 			/>
 		</OptionsButton>
-		<OptionsButton name="Sort roles" icon="../images/icons/sort.png" :slot-count="4" @click="sortAll">
+		<OptionsButton name="Sort roles" icon="images/icons/sort.png" :slot-count="4" @click="sortAll">
 			<ButtonOption
 				:name="`Autosort: ${settings.sortRoles.autosortRoles}`"
 				:options="[
-					{value: true, icon: '../images/icons/autosortOn.png'},
-					{value: false, icon: '../images/icons/autosortOff.png'},
+					{value: true, icon: 'images/icons/autosortOn.png'},
+					{value: false, icon: 'images/icons/autosortOff.png'},
 				]"
 				v-model="settings.sortRoles.autosortRoles"
 			/>
 			<ButtonOption
 				:name="`Sort by: ${settings.sortRoles.sortBy}`"
 				:options="[
-					{value: 'Alignment', icon: '../images/icons/sortAlignment.png'},
-					{value: 'Lights out phase', icon: '../images/icons/sortLightsOut.png'},
-					{value: 'Name', icon: '../images/icons/sortAlphabetical.png'},
+					{value: 'Alignment', icon: 'images/icons/sortAlignment.png'},
+					{value: 'Lights out phase', icon: 'images/icons/sortLightsOut.png'},
+					{value: 'Name', icon: 'images/icons/sortAlphabetical.png'},
 				]"
 				v-model="settings.sortRoles.sortBy"
 			/>
 			<ButtonOption
 				:name="`Isolate required roles: ${settings.sortRoles.isolateRequiredRoles}`"
 				:options="[
-					{value: true, icon: '../images/icons/sortRoleCheck.png'},
-					{value: false, icon: '../images/icons/sortRoleX.png'},
+					{value: true, icon: 'images/icons/sortRoleCheck.png'},
+					{value: false, icon: 'images/icons/sortRoleX.png'},
 				]"
 				v-model="settings.sortRoles.isolateRequiredRoles"
 			/>
 			<ButtonOption
 				:name="`Prioritize super roles: ${settings.sortRoles.prioritizeSuperRoles}`"
 				:options="[
-					{value: true, icon: '../images/icons/sortSuperOn.png'},
-					{value: false, icon: '../images/icons/sortSuperOff.png'},
+					{value: true, icon: 'images/icons/sortSuperOn.png'},
+					{value: false, icon: 'images/icons/sortSuperOff.png'},
 				]"
 				v-model="settings.sortRoles.prioritizeSuperRoles"
 			/>
 		</OptionsButton>
-		<OptionsButton name="Add role" icon="../images/icons/add.png" :slot-count="2" @click="addRole">
+		<OptionsButton name="Add role" icon="images/icons/add.png" :slot-count="2" @click="addRole">
 			<ButtonOption
 				:name="`Insert ${settings.addRole.addedRole}`"
 				:options="[
-					{value: 'Bystander', icon: '../images/icons/insertBystander.png'},
-					{value: 'Any role', icon: '../images/icons/insertAnyRole.png'},
-					{value: 'Random role', icon: '../images/icons/insertRandomRole.png'},
-					{value: 'Last role duplicate', icon: '../images/icons/insertDuplicate.png'},
+					{value: 'Bystander', icon: 'images/icons/insertBystander.png'},
+					{value: 'Any role', icon: 'images/icons/insertAnyRole.png'},
+					{value: 'Random role', icon: 'images/icons/insertRandomRole.png'},
+					{value: 'Last role duplicate', icon: 'images/icons/insertDuplicate.png'},
 				]"
 				v-model="settings.addRole.addedRole"
 			/>
 			<ButtonOption
 				:name="`Fill required roles: ${settings.addRole.fillRequiredRoles}`"
 				:options="[
-					{value: true, icon: '../images/icons/roleCheck.png'},
-					{value: false, icon: '../images/icons/roleX.png'},
+					{value: true, icon: 'images/icons/roleCheck.png'},
+					{value: false, icon: 'images/icons/roleX.png'},
 				]"
 				v-model="settings.addRole.fillRequiredRoles"
 			/>

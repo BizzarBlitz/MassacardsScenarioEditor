@@ -124,7 +124,7 @@ function onAlignmentClicked() {
 			>
 				<IconButton name="Delete" icon="images/icons/close.png" @click="deleteRole" />
 				<IconButton name="Duplicate" icon="images/icons/duplicate.png" @click="duplicateRole" />
-				<IconButton name="Randomize" icon="../images/icons/randomize.png" @click="randomizeRole" />
+				<IconButton name="Randomize" icon="images/icons/randomize.png" @click="randomizeRole" />
 				<a :href="wikiLink" target="_blank" class="contents">
 					<IconButton name="Read wiki entry" icon="images/icons/wiki.png" @mousedown="$event.stopPropagation()" />
 				</a>

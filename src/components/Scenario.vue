@@ -85,7 +85,7 @@ function deleteRole(event: Event) {
 				</abbr>
 				<span v-else>{{ roles.length }} roles</span>
 			</div>
-			<IconButton name="Delete all roles" icon="../images/icons/trash.png" @click="roles.length = 0" class="grow-0" />
+			<IconButton name="Delete all roles" icon="images/icons/trash.png" @click="roles.length = 0" class="grow-0" />
 		</div>
 	</div>
 </template>
