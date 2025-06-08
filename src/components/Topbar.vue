@@ -8,7 +8,7 @@ import IconButton from "./IconButton.vue"
 		<nav class="bg-red align-end flex h-16 w-full place-content-center justify-end p-1">
 			<!-- <IconButton name="Clear cookies" icon="../../images/icons/clearCookies.png" class="h-full grow-0 invert" /> not doing allat -->
 			<a href="https://github.com/BizzarBlitz/MassacardsScenarioEditor" target="_blank">
-				<IconButton name="GitHub" icon="../../images/icons/github.png" class="h-full grow-0 invert" />
+				<IconButton name="GitHub" icon="/images/icons/github.png" class="h-full grow-0 invert" />
 			</a>
 		</nav>
 	</header>
