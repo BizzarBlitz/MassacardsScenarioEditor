@@ -30,9 +30,9 @@ const wikiLink = computed(
 )
 const roleIconSrc = computed(() => {
 	if (props.roleData.isAlignmentRole) {
-		return `../../images/alignments/${props.roleData.alignment}.png`
+		return `images/alignments/${props.roleData.alignment}.png`
 	} else {
-		return `../../images/roles/${props.roleData.name}.png`
+		return `images/roles/${props.roleData.name}.png`
 	}
 })
 
@@ -101,7 +101,7 @@ function onAlignmentClicked() {
 				<div class="mt-1 flex w-32 max-w-40 gap-1">
 					<IconButton
 						name=""
-						:icon="`../../images/alignments/${props.roleData.alignment}.png`"
+						:icon="`images/alignments/${props.roleData.alignment}.png`"
 						@click="onAlignmentClicked"
 						class="h-8"
 					/>
@@ -122,15 +122,11 @@ function onAlignmentClicked() {
 				id="role-controls"
 				class="col-[3_/_span_2] flex flex-col justify-between pl-1 opacity-0 transition-[clip-path,_opacity] duration-100 group-hover:opacity-100"
 			>
-				<IconButton name="Delete" icon="../../images/icons/close.png" @click="deleteRole" />
-				<IconButton name="Duplicate" icon="../../images/icons/duplicate.png" @click="duplicateRole" />
+				<IconButton name="Delete" icon="images/icons/close.png" @click="deleteRole" />
+				<IconButton name="Duplicate" icon="images/icons/duplicate.png" @click="duplicateRole" />
 				<IconButton name="Randomize" icon="../images/icons/randomize.png" @click="randomizeRole" />
 				<a :href="wikiLink" target="_blank" class="contents">
-					<IconButton
-						name="Read wiki entry"
-						icon="../../images/icons/wiki.png"
-						@mousedown="$event.stopPropagation()"
-					/>
+					<IconButton name="Read wiki entry" icon="images/icons/wiki.png" @mousedown="$event.stopPropagation()" />
 				</a>
 			</div>
 		</div>

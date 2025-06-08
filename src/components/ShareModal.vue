@@ -16,14 +16,14 @@ defineExpose({
 })
 
 const modal = useTemplateRef("share-modal")
-const copyLinkIcon = ref("../../images/icons/link.png")
+const copyLinkIcon = ref("images/icons/link.png")
 
 function showModal() {
 	modal.value?.showModal()
 }
 function hideModal() {
 	modal.value?.close()
-	copyLinkIcon.value = "../../images/icons/link.png"
+	copyLinkIcon.value = "images/icons/link.png"
 }
 
 function onModalClicked(event: MouseEvent) {
@@ -36,7 +36,7 @@ function onModalClicked(event: MouseEvent) {
 function copyShareLink() {
 	const shareLink = urlManager.generateLink(props.roles, props.scenarioName)
 	navigator.clipboard.writeText(shareLink)
-	copyLinkIcon.value = "../../images/icons/check.png"
+	copyLinkIcon.value = "images/icons/check.png"
 }
 </script>
 
@@ -48,7 +48,7 @@ function copyShareLink() {
 	>
 		<Border background="black" class="m-4 mb-0">
 			<div class="absolute right-[15px] bottom-full mb-2 flex h-8 place-content-end">
-				<IconButton name="Close" icon="../../images/icons/close.png" @click="hideModal" class="grow-0" />
+				<IconButton name="Close" icon="images/icons/close.png" @click="hideModal" class="grow-0" />
 			</div>
 			<div class="mb-1 text-center text-3xl font-bold">{{ scenarioName }}</div>
 			<Border class="m-2 overflow-auto">
@@ -64,8 +64,8 @@ function copyShareLink() {
 						<img
 							:src="
 								role.isAlignmentRole
-									? `../../images/alignments/${role.alignment}.png`
-									: `../../images/roles/${role.name}.png`
+									? `images/alignments/${role.alignment}.png`
+									: `images/roles/${role.name}.png`
 							"
 							:alt="role.isAlignmentRole ? role.alignment : role.name"
 							draggable="false"

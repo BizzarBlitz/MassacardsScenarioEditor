@@ -124,7 +124,7 @@ function openShareModal() {
 
 <template>
 	<div class="flex flex-row-reverse gap-2">
-		<IconButton name="Share" icon="../../images/icons/share.png" @click="openShareModal" />
+		<IconButton name="Share" icon="images/icons/share.png" @click="openShareModal" />
 		<OptionsButton name="Randomize all" icon="../images/icons/randomize.png" :slot-count="4" @click="randomizeAll">
 			<ButtonOption
 				:name="`Allow duplicates: ${settings.randomizeRoles.allowDuplicates}`"
