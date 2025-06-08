@@ -1,0 +1,181 @@
+.insert.role {
+	order: 1;
+	transition-property: background-color;
+	transition-duration: 0.25s;
+	transition-timing-function: linear;
+	border: none;
+	background: none;
+	color: white;
+	padding-top: 1em;
+
+	& img {
+		margin-top: 1rem; /* Space that role-name usually occupies */
+		background: none;
+	}
+
+	& div {
+		height: 5.75em;
+		padding-top: 1em;
+	}
+}
+
+.insert.role:hover {
+	background-color: rgba(255, 0, 0, 0.375);
+}
+
+.role {
+	margin: 0.5em;
+	
+	display: grid;
+	position: relative;
+	width: 10em;
+	padding: 1em;
+	padding-top: 0.5em; /* So role name looks more centered */
+	cursor: grab;
+}
+
+.dragging {
+	opacity: 50%;
+	cursor: grabbing;
+}
+
+.role-name {
+	height: 1.5rem;
+	width: 100%;
+	align-content: center;
+	text-align: center;
+	border: 0;
+}
+
+.role-icon-container {
+	width: 100%;
+	margin-bottom: 0.5em;
+	position: relative;
+}
+
+.role-image:hover + .role-icon-buttons {
+	opacity: 1;
+}
+
+.role-icon-buttons {
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: 0.25s;
+	pointer-events: none;
+
+	position: absolute;
+	top: 0.25em;
+	right: 0.25em;
+	height: 1.5em;
+	width: 1.5em;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 0.125em;
+
+	& button {
+		pointer-events: auto;
+		padding: 0;
+		background: none;
+		border: none;
+
+		& img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	& button:hover {
+		opacity: 1;
+	}
+}
+
+.role-icon-buttons:has(> button:hover) {
+	opacity: 1;
+}
+
+.remove-role:hover {
+	background: unset;
+}
+
+.role-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.role-button {
+	border: 0.125em solid red;
+	background-color: rgba(255, 0, 0, 0);
+	transition-property: background-color;
+	transition-duration: 0.25s;
+	transition-timing-function: linear;
+
+	& img {
+		padding: 0.25em;
+		transition-property: filter;
+		transition-duration: 0.25s;
+		transition-timing-function: linear;
+	}
+}
+
+.role-button:hover {
+	background-color: rgba(255, 0, 0, 0.375);
+}
+
+.role-button[data-enabled="true"] {
+	background-color: red;
+
+	& img {
+		filter: invert(100%);
+	}
+}
+
+#randomize, #lock {
+	height: 3.75em;
+	width: 3.75em;
+	margin-bottom: 0.5em;
+	padding: 0;
+
+	& img {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+#randomize > img {
+	padding: 0.5em;
+}
+
+#alignment {
+	width: 100%;
+	height: 1.5em;
+	display: flex;
+
+	& #right-arrow {
+		rotate: 0.5turn;
+	}
+
+	& .alignment-name {
+		border: 0;
+		padding: 2px;
+		width: 56.25%;
+		flex-grow: 1; /* Fill remaining space */
+		text-align: center;
+		font-size: 12px;
+	}
+
+	& img {
+		height: 100%;
+		width: 1em;
+		padding: 1px;
+	}
+
+	& img.alignment-image {
+		width: auto;
+		aspect-ratio: 1;
+		/* filter: none; */
+	}
+}
