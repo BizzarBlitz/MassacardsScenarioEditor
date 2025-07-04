@@ -2,6 +2,7 @@
 import {ref, useTemplateRef} from "vue"
 import Border from "./Border.vue"
 import IconButton from "./IconButton.vue"
+import settings from "../modules/settings.mts"
 import * as urlManager from "../modules/urlManager.mts"
 import type {RoleData} from "../modules/roles.mts"
 
@@ -34,7 +35,7 @@ function onModalClicked(event: MouseEvent) {
 }
 
 function copyShareLink() {
-	const shareLink = urlManager.generateLink(props.roles, props.scenarioName)
+	const shareLink = urlManager.generateLink(props.roles, props.scenarioName, settings.scenario)
 	navigator.clipboard.writeText(shareLink)
 	copyLinkIcon.value = "images/icons/check.png"
 }
@@ -74,6 +75,36 @@ function copyShareLink() {
 					</div>
 				</div>
 			</Border>
+			<div class="text-gray mt-2 flex h-8 justify-between px-1">
+				<div
+					class="flex place-items-center gap-2"
+					:style="{opacity: settings.scenario.gamemode === undefined ? 0 : 1}"
+				>
+					<img
+						:src="`images/icons/gamemodes/${settings.scenario.gamemode?.toLowerCase() || 'normal'}.png`"
+						:alt="`Gamemode: ${settings.scenario.gamemode}`"
+						:title="`Gamemode: ${settings.scenario.gamemode}`"
+						draggable="false"
+						class="h-full"
+						style="image-rendering: pixelated"
+					/>
+					<span>Gamemode: {{ settings.scenario.gamemode }}</span>
+				</div>
+				<div
+					class="flex place-items-center gap-2"
+					:style="{opacity: settings.scenario.guestNumberCards === undefined ? 0 : 1}"
+				>
+					<span>Guest number cards {{ settings.scenario.guestNumberCards ? "required" : "prohibited" }}</span>
+					<img
+						:src="`images/icons/${settings.scenario.guestNumberCards ? 'guestNumberCards' : 'guestNumberCardsOff'}.png`"
+						:alt="`Guest number cards ${settings.scenario.guestNumberCards ? 'required' : 'prohibited'}`"
+						:title="`Guest number cards ${settings.scenario.guestNumberCards ? 'required' : 'prohibited'}`"
+						draggable="false"
+						class="h-full"
+						style="image-rendering: pixelated"
+					/>
+				</div>
+			</div>
 			<div class="mt-4 mb-2 flex h-8 place-content-end">
 				<IconButton name="Copy link" :icon="copyLinkIcon" @click="copyShareLink" class="grow-0" />
 			</div>

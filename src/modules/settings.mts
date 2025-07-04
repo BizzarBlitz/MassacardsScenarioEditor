@@ -1,6 +1,10 @@
 import {reactive} from "vue"
 
 export default reactive({
+	scenario: {
+		gamemode: undefined as string | undefined, // Same as normal
+		guestNumberCards: undefined as boolean | undefined,
+	},
 	addRole: {
 		addedRole: "Bystander" as "Bystander" | "Any role" | "Random role" | "Last role duplicate",
 		fillRequiredRoles: true,

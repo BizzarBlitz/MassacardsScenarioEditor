@@ -3,7 +3,7 @@ import {computed} from "vue"
 import IconButton from "./IconButton.vue"
 
 export type ConfigOption = {
-	value: string | boolean
+	value: unknown
 	icon: string
 }
 
@@ -12,7 +12,7 @@ const props = defineProps<{
 	options: ConfigOption[]
 }>()
 
-const value = defineModel<string | boolean>({required: true})
+const value = defineModel<unknown>({required: true})
 const icon = computed(() => {
 	return props.options.find((option) => option.value === value.value)!.icon
 })
@@ -30,6 +30,6 @@ function onClick() {
 		:name
 		:icon="icon"
 		@click="onClick"
-		:style="{opacity: typeof value === 'boolean' && value === false ? 0.25 : undefined}"
+		:style="{opacity: typeof value === 'boolean' && value === false && options.length === 2 ? 0.25 : undefined}"
 	/>
 </template>

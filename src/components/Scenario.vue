@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import {ref, useTemplateRef} from "vue"
 import Border from "./Border.vue"
+import ButtonOption from "./ButtonOption.vue"
 import IconButton from "./IconButton.vue"
 import Role from "./Role.vue"
 import ScenarioButtons from "./ScenarioButtons.vue"
+import settings from "../modules/settings.mts"
 import * as urlManager from "../modules/urlManager.mts"
 
 import {useSortable} from "@vueuse/integrations/useSortable"
@@ -16,8 +18,10 @@ const MAX_ROLES = 13
 
 const linkData = urlManager.parseLink(window.location.hash)
 const roles = ref(urlManager.generateRolesFromNames(linkData.roleNames))
-
 const name = ref(linkData.name || "Click to edit scenario name")
+
+settings.scenario.gamemode = linkData.scenarioSettings.gamemode
+settings.scenario.guestNumberCards = linkData.scenarioSettings.guestNumberCards
 
 defineExpose({
 	roles,
@@ -41,6 +45,38 @@ function deleteRole(event: Event) {
 	<div class="m-auto mt-32 mb-4 w-4/5">
 		<!-- Button: 2rem, Gap: 0.5rem -->
 		<div class="mb-1 grid h-8 w-full grid-cols-[9.5rem_1fr_9.5rem] grid-rows-1">
+			<div class="flex gap-2">
+				<ButtonOption
+					:name="`${
+						settings.scenario.guestNumberCards === undefined
+							? 'Toggle guest number cards'
+							: `Guest number cards: ${settings.scenario.guestNumberCards ? 'On' : 'Off'}`
+					}`"
+					:options="[
+						{value: undefined, icon: 'images/icons/guestNumberCards.png'},
+						{value: true, icon: 'images/icons/guestNumberCardsOn.png'},
+						{value: false, icon: 'images/icons/guestNumberCardsOff.png'},
+					]"
+					v-model="settings.scenario.guestNumberCards"
+					class="grow-0"
+				/>
+				<ButtonOption
+					:name="`Gamemode: ${settings.scenario.gamemode || 'Normal'}`"
+					:options="[
+						{value: undefined, icon: 'images/icons/gamemodes/normal.png'},
+						{value: 'Massacre', icon: 'images/icons/gamemodes/massacre.png'},
+						{value: 'Investigator', icon: 'images/icons/gamemodes/investigator.png'},
+						{value: 'Apocalypse', icon: 'images/icons/gamemodes/apocalypse.png'},
+						{value: 'Ritual', icon: 'images/icons/gamemodes/ritual.png'},
+						{value: 'Flashlight', icon: 'images/icons/gamemodes/flashlight.png'},
+						{value: 'Feast', icon: 'images/icons/gamemodes/feast.png'},
+						{value: 'Deathless', icon: 'images/icons/gamemodes/deathless.png'},
+						{value: 'Afterlife', icon: 'images/icons/gamemodes/afterlife.png'},
+					]"
+					v-model="settings.scenario.gamemode"
+					class="grow-0"
+				/>
+			</div>
 			<input
 				type="text"
 				placeholder="No scenario name"

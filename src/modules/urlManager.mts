@@ -2,10 +2,12 @@ import * as JSURL from "jsurl2"
 import type {Alignment, RoleData} from "./roles.mts"
 import generateRoleId from "./functions/generateRoleId.mts"
 import roles from "./roles.mts"
+import settings from "./settings.mts"
 
 export type LinkData = {
 	name: string
 	roleNames: string[]
+	scenarioSettings: typeof settings.scenario
 }
 
 const AbsoluteUrl: string = window.location.origin + window.location.pathname
@@ -33,10 +35,14 @@ function parseLegacyLink(): LinkData | undefined {
 	return {
 		name: name,
 		roleNames: roleNames.split("_"),
+		scenarioSettings: {
+			gamemode: undefined,
+			guestNumberCards: undefined,
+		},
 	}
 }
 
-export function generateLink(roles: RoleData[], name: string): string {
+export function generateLink(roles: RoleData[], name: string, scenarioSettings: typeof settings.scenario): string {
 	const roleNames: string[] = getNamesFromRoles(roles)
 
 	return (
@@ -46,6 +52,8 @@ export function generateLink(roles: RoleData[], name: string): string {
 			{
 				n: name,
 				r: roleNames,
+				gm: scenarioSettings.gamemode,
+				gnc: scenarioSettings.guestNumberCards,
 			},
 			{short: true},
 		)
@@ -63,16 +71,24 @@ export function parseLink(link: string): LinkData {
 		{
 			n: "Click to edit scenario name",
 			r: ["Killer", "Private Eye", "Witness"],
+			gm: undefined as boolean | undefined,
+			gnc: undefined as boolean | undefined,
 		},
 		{deURI: true},
 	)
 
 	const name = typeof rawData.n === "string" ? rawData.n : "Click to edit scenario name"
 	const roleNames = typeof rawData.r === "object" && rawData.r[0] ? rawData.r : ["Killer", "Private Eye", "Witness"]
+	const gamemode = typeof rawData.gm === "string" ? rawData.gm : undefined
+	const guestNumberCards = typeof rawData.gnc === "boolean" ? rawData.gnc : undefined
 
 	return {
 		name: name,
 		roleNames: roleNames,
+		scenarioSettings: {
+			gamemode: gamemode,
+			guestNumberCards: guestNumberCards,
+		},
 	}
 }
 
