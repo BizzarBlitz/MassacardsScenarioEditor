@@ -35,9 +35,15 @@ useSortable(container, roles, {
 	animation: 100,
 })
 
-function deleteRole(event: Event) {
+function deleteRole() {
 	roles.value.pop()
-	event.preventDefault()
+}
+
+function preventAutoscroll(event: MouseEvent) {
+	// 1 == middle mouse button
+	if (event.button === 1) {
+		event.preventDefault()
+	}
 }
 </script>
 
@@ -92,12 +98,13 @@ function deleteRole(event: Event) {
 				v-show="roles.length === 0"
 				class="text-gray col-1 row-1 h-47 w-full place-content-center text-center text-2xl select-none"
 			>
-				Click anywhere to add role
+				Click anywhere to add role or use 'Add role' button<br />Middle click anywhere to delete rightmost role
 			</div>
 			<div
 				ref="role-container"
 				@click="scenarioButtons!.addRole"
 				@click.middle="deleteRole"
+				@mousedown="preventAutoscroll"
 				class="col-1 row-1 flex flex-wrap place-content-center gap-y-6 select-none"
 			>
 				<Role

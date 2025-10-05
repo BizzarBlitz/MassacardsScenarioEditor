@@ -18,6 +18,8 @@ defineExpose({
 
 const modal = useTemplateRef("share-modal")
 const copyLinkIcon = ref("images/icons/link.png")
+const copyListIcon = ref("images/icons/list.png")
+const copyWikiListIcon = ref("images/icons/wikiList.png")
 
 function showModal() {
 	modal.value?.showModal()
@@ -25,6 +27,8 @@ function showModal() {
 function hideModal() {
 	modal.value?.close()
 	copyLinkIcon.value = "images/icons/link.png"
+	copyListIcon.value = "images/icons/list.png"
+	copyWikiListIcon.value = "images/icons/wikiList.png"
 }
 
 function onModalClicked(event: MouseEvent) {
@@ -34,10 +38,44 @@ function onModalClicked(event: MouseEvent) {
 	}
 }
 
+function getListHeader() {
+	return `## [${props.scenarioName}](<${urlManager.generateLink(props.roles, props.scenarioName, settings.scenario)}>)`
+}
+
 function copyShareLink() {
 	const shareLink = urlManager.generateLink(props.roles, props.scenarioName, settings.scenario)
 	navigator.clipboard.writeText(shareLink)
 	copyLinkIcon.value = "images/icons/check.png"
+}
+
+function copyList() {
+	let list = getListHeader()
+
+	props.roles.forEach((role) => {
+		if (role.isAlignmentRole) {
+			list += `\n- Any ${role.alignment === "Unknown" ? "Role" : role.alignment}`
+		} else {
+			list += `\n- ${role.name}`
+		}
+	})
+
+	navigator.clipboard.writeText(list)
+	copyListIcon.value = "images/icons/check.png"
+}
+
+function copyWikiList() {
+	let list = getListHeader()
+
+	props.roles.forEach((role) => {
+		if (role.isAlignmentRole) {
+			list += `\n- Any [${role.alignment === "Unknown" ? "Role" : role.alignment}](<https://massacards.miraheze.org/wiki/${role.alignment.replaceAll(" ", "_")}_Alignment>)`
+		} else {
+			list += `\n- [${role.name}](<https://massacards.miraheze.org/wiki/${role.name.replaceAll(" ", "_")}>)`
+		}
+	})
+
+	navigator.clipboard.writeText(list)
+	copyWikiListIcon.value = "images/icons/check.png"
 }
 </script>
 
@@ -105,7 +143,9 @@ function copyShareLink() {
 					/>
 				</div>
 			</div>
-			<div class="mt-4 mb-2 flex h-8 place-content-end">
+			<div class="mt-4 mb-2 flex h-8 place-content-end gap-2">
+				<IconButton name="Copy list" :icon="copyListIcon" @click="copyList" class="grow-0" />
+				<IconButton name="Copy list with wiki links" :icon="copyWikiListIcon" @click="copyWikiList" class="grow-0" />
 				<IconButton name="Copy link" :icon="copyLinkIcon" @click="copyShareLink" class="grow-0" />
 			</div>
 		</Border>
