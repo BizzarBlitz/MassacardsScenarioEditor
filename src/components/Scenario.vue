@@ -48,7 +48,7 @@ function preventAutoscroll(event: MouseEvent) {
 </script>
 
 <template>
-	<div class="m-auto mt-32 mb-4 w-4/5">
+	<div class="m-auto mt-32 mb-4 w-4/5" id="scenario">
 		<!-- Button: 2rem, Gap: 0.5rem -->
 		<div class="mb-1 grid h-8 w-full grid-cols-[9.5rem_1fr_9.5rem] grid-rows-1">
 			<div class="flex gap-2">
@@ -98,7 +98,8 @@ function preventAutoscroll(event: MouseEvent) {
 				v-show="roles.length === 0"
 				class="text-gray col-1 row-1 h-47 w-full place-content-center text-center text-2xl select-none"
 			>
-				Click anywhere to add role or use 'Add role' button<br />Middle click anywhere to delete rightmost role
+				Click anywhere to add a role or use the 'Add role' button<br />Middle click anywhere to delete the rightmost
+				role
 			</div>
 			<div
 				ref="role-container"

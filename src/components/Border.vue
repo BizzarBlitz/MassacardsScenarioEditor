@@ -20,7 +20,7 @@ defineOptions({
 				border-style: solid;
 				border-width: calc(9px * var(--border-scale-factor)) calc(20px * var(--border-scale-factor))
 					calc(3px * var(--border-scale-factor)) calc(3px * var(--border-scale-factor));
-				border-image-source: url(&quot;https://static.miraheze.org/massacardswiki/4/46/Border.png&quot;);
+				border-image-source: url(&quot;images/border.png&quot;);
 				border-image-slice: 144 320 48 48;`"
 		></div>
 		<div
@@ -46,7 +46,7 @@ defineOptions({
 	border-style: solid;
 	border-width: calc(9px * var(--border-scale-factor)) calc(20px * var(--border-scale-factor))
 		calc(3px * var(--border-scale-factor)) calc(3px * var(--border-scale-factor));
-	border-image-source: url("https://static.miraheze.org/massacardswiki/4/46/Border.png");
+	border-image-source: url("images/border.png");
 	border-image-slice: 144 320 48 48;
 }
 </style> -->
