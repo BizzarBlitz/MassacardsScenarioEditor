@@ -4,6 +4,7 @@ export interface RoleData {
 	name: string
 	alignment: Alignment
 	isAlignmentRole: boolean // "Any {{alignment}}"
+	optional: boolean
 	id: number // Unique key for v-for
 }
 

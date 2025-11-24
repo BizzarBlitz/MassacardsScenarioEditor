@@ -1,13 +1,8 @@
+import settings from "../settings.mts"
 import type {RoleData} from "../roles.mts"
 
-export interface SortSettings {
-	sortBy: string
-	isolateRequiredRoles: boolean
-	prioritizeSuperRoles: boolean
-}
-
-const requiredRoleNames = ["Witness", "Private Eye", "Hero", "Killer", "Massacre"] // In reverse sort order
-const superRoleNames = [
+const REQUIRED_ROLE_NAMES = ["Massacre", "Killer", "Hero", "Private Eye", "Witness"] // In sort order
+const SUPER_ROLE_NAMES = [
 	"Patient Zero",
 	"Fungus",
 	"Bleeder",
@@ -28,79 +23,79 @@ const superRoleNames = [
 	"Deity of Acceptance",
 ]
 
-const lightsOutOrder = [
-	"Murderous",
-	"Dark Innocent",
-	"Neutral",
-	"Undead",
-	"Hungry",
-	"None",
-	"Innocent",
-	"True Neutral",
-	"Unknown",
-]
-
-const alignmentOrder = [
-	"Murderous",
-	"Dark Innocent",
-	"Innocent",
-	"Neutral",
-	"True Neutral",
-	"None",
-	"Undead",
-	"Hungry",
-	"Unknown",
-]
-
-function getIntraAlignmentPriority(role: RoleData, prioritizeSuperRoles: boolean): number {
-	if (role.isAlignmentRole) return -1
-	if (prioritizeSuperRoles && superRoleNames.indexOf(role.name) !== -1) return 1
-	return 0
-}
-
 function getLightsOutPriority(role: RoleData) {
 	if (role.name === "Private Eye") {
 		return -1
 	}
 
-	return lightsOutOrder.indexOf(role.alignment)
+	return settings.sortOrders.lightsOut.indexOf(role.alignment)
 }
 
-export default function sortRoles(roles: RoleData[], sortSettings: SortSettings) {
-	roles.sort((aRole, bRole) => {
-		// >0 = [b, a]
-		// <0 = [a, b]
-		// Check is role is required
-		if (sortSettings.isolateRequiredRoles) {
-			const aRequiredIndex = aRole.isAlignmentRole ? -1 : requiredRoleNames.indexOf(aRole.name)
-			const bRequiredIndex = bRole.isAlignmentRole ? -1 : requiredRoleNames.indexOf(bRole.name)
+function compareBooleans(a: boolean, b: boolean, prioritizedValue: boolean) {
+	const aValue = Number(a)
+	const bValue = Number(b)
+	return prioritizedValue === true ? bValue - aValue : aValue - bValue
+}
 
-			if (aRequiredIndex !== -1 || bRequiredIndex !== -1) {
-				return bRequiredIndex - aRequiredIndex
+export default function sortRoles(roles: RoleData[]) {
+	roles.sort((aRole, bRole) => {
+		// Isolate required roles
+		if (settings.sortRoles.isolateRequiredRoles) {
+			const aIndex = REQUIRED_ROLE_NAMES.indexOf(aRole.name)
+			const bIndex = REQUIRED_ROLE_NAMES.indexOf(bRole.name)
+
+			const aIsRequired = aIndex !== -1 && !aRole.isAlignmentRole
+			const bIsRequired = bIndex !== -1 && !bRole.isAlignmentRole
+
+			if (aIsRequired && bIsRequired) {
+				return aIndex - bIndex
+			} else if (aIsRequired) {
+				return -1
+			} else if (bIsRequired) {
+				return 1
 			}
 		}
 
-		const aIntraAlignmentPriority = getIntraAlignmentPriority(aRole, sortSettings.prioritizeSuperRoles)
-		const bIntraAlignmentPriority = getIntraAlignmentPriority(bRole, sortSettings.prioritizeSuperRoles)
-		const intraAlignmentSortResult = bIntraAlignmentPriority - aIntraAlignmentPriority
+		// Sort by alignment
+		if (settings.sortRoles.sortBy === "Alignment" && aRole.alignment !== bRole.alignment) {
+			return (
+				settings.sortOrders.alignment.indexOf(aRole.alignment) -
+				settings.sortOrders.alignment.indexOf(bRole.alignment)
+			)
+		}
 
-		if (sortSettings.sortBy === "Lights out phase") {
-			const lightsOutSortResult = getLightsOutPriority(aRole) - getLightsOutPriority(bRole)
-			return lightsOutSortResult !== 0 ? lightsOutSortResult : intraAlignmentSortResult
-		} else if (sortSettings.sortBy === "Alignment") {
-			const alignmentSortResult = alignmentOrder.indexOf(aRole.alignment) - alignmentOrder.indexOf(bRole.alignment)
-			return alignmentSortResult !== 0 ? alignmentSortResult : intraAlignmentSortResult
-		} else if (sortSettings.sortBy === "Name") {
-			if (intraAlignmentSortResult !== 0) {
-				return intraAlignmentSortResult
+		// Sort by lights out
+		if (settings.sortRoles.sortBy === "Lights out phase") {
+			const aLightsOutPriority = getLightsOutPriority(aRole)
+			const bLightsOutPriority = getLightsOutPriority(bRole)
+
+			if (aLightsOutPriority !== bLightsOutPriority) {
+				return aLightsOutPriority - bLightsOutPriority
 			}
+		}
 
-			const aName = aRole.isAlignmentRole ? aRole.alignment : aRole.name
-			const bName = bRole.isAlignmentRole ? bRole.alignment : bRole.name
+		// Push back optional roles
+		if (aRole.optional !== bRole.optional) {
+			return compareBooleans(aRole.optional, bRole.optional, false)
+		}
 
-			if (aName > bName) return 1
-			if (aName < bName) return -1
-			return 0
+		// Push back alignment roles
+		if (aRole.isAlignmentRole !== bRole.isAlignmentRole) {
+			return compareBooleans(aRole.isAlignmentRole, bRole.isAlignmentRole, false)
+		}
+
+		// Prioritize super roles
+		if (settings.sortRoles.prioritizeSuperRoles) {
+			const aIsSuperRole = SUPER_ROLE_NAMES.indexOf(aRole.name) !== -1
+			const bIsSuperRole = SUPER_ROLE_NAMES.indexOf(bRole.name) !== -1
+
+			if (aIsSuperRole !== bIsSuperRole) {
+				return compareBooleans(aIsSuperRole, bIsSuperRole, true)
+			}
+		}
+
+		if (settings.sortRoles.sortBy === "Name") {
+			return aRole.name.localeCompare(bRole.name)
 		}
 
 		return 0

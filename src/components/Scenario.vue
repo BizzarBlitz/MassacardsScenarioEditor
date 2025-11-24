@@ -31,7 +31,7 @@ defineExpose({
 const scenarioButtons = useTemplateRef("scenario-buttons")
 const container = useTemplateRef("role-container")
 useSortable(container, roles, {
-	handle: "#role-icon",
+	handle: ".role-icon-container",
 	animation: 100,
 })
 
@@ -48,7 +48,7 @@ function preventAutoscroll(event: MouseEvent) {
 </script>
 
 <template>
-	<div class="m-auto mt-32 mb-4 w-4/5" id="scenario">
+	<div class="m-auto mt-32 mb-4 w-7/8" id="scenario">
 		<!-- Button: 2rem, Gap: 0.5rem -->
 		<div class="mb-1 grid h-8 w-full grid-cols-[9.5rem_1fr_9.5rem] grid-rows-1">
 			<div class="flex gap-2">
@@ -56,7 +56,7 @@ function preventAutoscroll(event: MouseEvent) {
 					:name="`${
 						settings.scenario.guestNumberCards === undefined
 							? 'Toggle guest number cards'
-							: `Guest number cards: ${settings.scenario.guestNumberCards ? 'On' : 'Off'}`
+							: `Guest number cards: ${settings.scenario.guestNumberCards ? 'Enabled' : 'Disabled'}`
 					}`"
 					:options="[
 						{value: undefined, icon: 'images/icons/guestNumberCards.png'},
@@ -89,6 +89,8 @@ function preventAutoscroll(event: MouseEvent) {
 				autocomplete="off"
 				v-model="name"
 				onclick="this.select() // Highlight text on click"
+				name="scenario-name"
+				id="scenario-name"
 				class="placeholder:text-gray col-2 text-center text-3xl font-bold focus:outline-0"
 			/>
 			<ScenarioButtons ref="scenario-buttons" v-model="roles" @button-clicked="emit" />
@@ -118,7 +120,7 @@ function preventAutoscroll(event: MouseEvent) {
 				/>
 			</div>
 		</Border>
-		<div class="mt-2 flex h-8 w-[calc(100%-10px)] justify-end gap-2">
+		<div class="mt-2 flex h-8 w-full justify-end gap-2">
 			<div class="place-content-center text-right">
 				<abbr
 					v-if="roles.length > MAX_ROLES"

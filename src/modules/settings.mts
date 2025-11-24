@@ -1,4 +1,5 @@
 import {reactive} from "vue"
+import type {Alignment} from "./roles.mts"
 
 export default reactive({
 	scenario: {
@@ -20,5 +21,39 @@ export default reactive({
 		maintainAlignments: true,
 		preserveRequiredRoles: true,
 		allowReplaceableSuperRoles: false,
+	},
+	shareScreenshot: {
+		showAlignments: false,
+	},
+	shareList: {
+		wikiLinks: true,
+		alignmentHeadings: true,
+		groupDuplicates: true,
+	},
+
+	// Technically not a setting (yet)
+	sortOrders: {
+		lightsOut: [
+			"Murderous",
+			"Dark Innocent",
+			"Neutral",
+			"Undead",
+			"Hungry",
+			"None",
+			"Innocent",
+			"True Neutral",
+			"Unknown",
+		] as Alignment[],
+		alignment: [
+			"Murderous",
+			"Dark Innocent",
+			"Innocent",
+			"Neutral",
+			"True Neutral",
+			"None",
+			"Undead",
+			"Hungry",
+			"Unknown",
+		] as Alignment[],
 	},
 })

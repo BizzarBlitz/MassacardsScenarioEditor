@@ -15,8 +15,9 @@ const AbsoluteUrl: string = window.location.origin + window.location.pathname
 function getNamesFromRoles(roles: RoleData[]): string[] {
 	const roleNames: string[] = []
 
+	// Starting hyphen denotes alignment role, ending hyphen denotes optional role
 	roles.forEach((role, index) => {
-		roleNames[index] = role.isAlignmentRole ? "-" + role.alignment : role.name
+		roleNames[index] = (role.isAlignmentRole ? "-" + role.alignment : role.name) + (role.optional ? "-" : "")
 	})
 
 	return roleNames
@@ -98,7 +99,16 @@ export function generateRolesFromNames(roleNames: string[]): RoleData[] {
 
 	roleNames.forEach((roleName, index) => {
 		roleName = roleName.toString()
-		const isAlignmentRole = roleName.slice(0, 1) === "-"
+		const isAlignmentRole = roleName[0] === "-"
+		if (isAlignmentRole) {
+			roleName = roleName.slice(1)
+		}
+
+		const isOptionalRole = roleName[roleName.length - 1] === "-"
+		if (isOptionalRole) {
+			roleName = roleName.slice(0, roleName.length - 1)
+		}
+
 		const isValidRole = isAlignmentRole
 			? roles.rolesByAlignment[roleName as Alignment] !== undefined
 			: roles.roleList.indexOf(roleName) !== -1
@@ -108,6 +118,7 @@ export function generateRolesFromNames(roleNames: string[]): RoleData[] {
 				name: "Bystander",
 				alignment: "Unknown",
 				isAlignmentRole: true,
+				optional: isOptionalRole,
 				id: starterId + index,
 			}
 			return
@@ -117,6 +128,7 @@ export function generateRolesFromNames(roleNames: string[]): RoleData[] {
 			name: isAlignmentRole ? "Bystander" : roleName,
 			alignment: isAlignmentRole ? (roleName as Alignment) : roles.roleAlignments[roleName],
 			isAlignmentRole: isAlignmentRole,
+			optional: isOptionalRole,
 			id: starterId + index,
 		}
 	})

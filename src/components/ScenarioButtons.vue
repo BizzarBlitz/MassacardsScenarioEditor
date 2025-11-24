@@ -24,6 +24,7 @@ function addRole() {
 				name: "Killer",
 				alignment: "Murderous",
 				isAlignmentRole: false,
+				optional: false,
 				id: generateRoleId(),
 			})
 			return
@@ -34,6 +35,7 @@ function addRole() {
 				name: "Private Eye",
 				alignment: "Dark Innocent",
 				isAlignmentRole: false,
+				optional: false,
 				id: generateRoleId(),
 			})
 			return
@@ -44,6 +46,7 @@ function addRole() {
 				name: "Witness",
 				alignment: "Innocent",
 				isAlignmentRole: false,
+				optional: false,
 				id: generateRoleId(),
 			})
 			return
@@ -55,6 +58,7 @@ function addRole() {
 			name: "Bystander",
 			alignment: "Innocent",
 			isAlignmentRole: false,
+			optional: false,
 			id: generateRoleId(),
 		})
 	} else if (settings.addRole.addedRole === "Any role") {
@@ -62,6 +66,7 @@ function addRole() {
 			name: "Bystander",
 			alignment: "Unknown",
 			isAlignmentRole: true,
+			optional: false,
 			id: generateRoleId(),
 		})
 	} else if (settings.addRole.addedRole === "Random role") {
@@ -72,6 +77,7 @@ function addRole() {
 			name: role,
 			alignment: alignment,
 			isAlignmentRole: false,
+			optional: false,
 			id: generateRoleId(),
 		})
 	} else if (settings.addRole.addedRole === "Last role duplicate") {
@@ -79,6 +85,7 @@ function addRole() {
 			scenarioRoles.value.push({
 				name: "Bystander",
 				alignment: "Innocent",
+				optional: false,
 				isAlignmentRole: false,
 				id: generateRoleId(),
 			})
@@ -90,6 +97,7 @@ function addRole() {
 			name: lastRole.name,
 			alignment: lastRole.alignment,
 			isAlignmentRole: lastRole.isAlignmentRole,
+			optional: lastRole.isAlignmentRole,
 			id: generateRoleId(),
 		})
 	} else {
@@ -102,7 +110,7 @@ function randomizeAll() {
 }
 
 function sortAll() {
-	sortRoles(scenarioRoles.value, settings.sortRoles)
+	sortRoles(scenarioRoles.value)
 }
 
 watch(
