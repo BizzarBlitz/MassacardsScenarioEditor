@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import {provide, useTemplateRef} from "vue"
+import ConfigModal from "./components/ConfigModal.vue"
 import Scenario from "./components/Scenario.vue"
-import Topbar from "./components/Topbar.vue"
 import ShareModal from "./components/ShareModal.vue"
+import Topbar from "./components/Topbar.vue"
 
-const scenario = useTemplateRef("scenario")
 const shareModal = useTemplateRef("share-modal")
+const configModal = useTemplateRef("config-modal")
 
 provide("shareModal", shareModal)
+provide("configModal", configModal)
 </script>
 
 <template>
 	<Topbar />
-	<ShareModal :roles="scenario?.roles || []" :scenario-name="scenario?.name || ''" ref="share-modal" />
+	<ShareModal ref="share-modal" />
+	<ConfigModal ref="config-modal" />
 	<main>
 		<div id="subtitle" class="justify-center pt-1 text-center text-xl font-bold">
 			A tool for quickly editing
@@ -29,6 +32,6 @@ provide("shareModal", shareModal)
 				>BizzarBlitz</a
 			>
 		</div>
-		<Scenario ref="scenario" />
+		<Scenario />
 	</main>
 </template>

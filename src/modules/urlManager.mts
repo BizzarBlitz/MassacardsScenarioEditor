@@ -1,11 +1,9 @@
 import * as JSURL from "jsurl2"
 import type {Alignment, RoleData} from "./roles.mts"
-import generateRoleId from "./functions/generateRoleId.mts"
 import roles from "./roles.mts"
 import settings from "./settings.mts"
 
 export type LinkData = {
-	name: string
 	roleNames: string[]
 	scenarioSettings: typeof settings.scenario
 }
@@ -34,11 +32,11 @@ function parseLegacyLink(): LinkData | undefined {
 	}
 
 	return {
-		name: name,
 		roleNames: roleNames.split("_"),
 		scenarioSettings: {
-			gamemode: undefined,
-			guestNumberCards: undefined,
+			name: name || settings.scenario.name,
+			gamemodes: settings.scenario.gamemodes,
+			guestNumberCards: settings.scenario.guestNumberCards,
 		},
 	}
 }
@@ -53,7 +51,7 @@ export function generateLink(roles: RoleData[], name: string, scenarioSettings: 
 			{
 				n: name,
 				r: roleNames,
-				gm: scenarioSettings.gamemode,
+				gm: scenarioSettings.gamemodes,
 				gnc: scenarioSettings.guestNumberCards,
 			},
 			{short: true},
@@ -70,31 +68,31 @@ export function parseLink(link: string): LinkData {
 	const rawData = JSURL.tryParse(
 		link.substring(1),
 		{
-			n: "Click to edit scenario name",
-			r: ["Killer", "Private Eye", "Witness"],
-			gm: undefined as boolean | undefined,
-			gnc: undefined as boolean | undefined,
+			n: settings.scenario.name, // Name
+			r: ["Killer", "Private Eye", "Witness"], // Roles
+			gm: settings.scenario.gamemodes, // Gamemodes
+			gnc: settings.scenario.guestNumberCards, // Guest number cards
 		},
 		{deURI: true},
 	)
 
-	const name = typeof rawData.n === "string" ? rawData.n : "Click to edit scenario name"
-	const roleNames = typeof rawData.r === "object" && rawData.r[0] ? rawData.r : ["Killer", "Private Eye", "Witness"]
-	const gamemode = typeof rawData.gm === "string" ? rawData.gm : undefined
-	const guestNumberCards = typeof rawData.gnc === "boolean" ? rawData.gnc : undefined
+	const name = typeof rawData.n === "string" ? rawData.n : settings.scenario.name
+	const roleNames = Array.isArray(rawData.r) ? rawData.r : ["Killer", "Private Eye", "Witness"]
+	const gamemodes = Array.isArray(rawData.gm) ? rawData.gm : settings.scenario.gamemodes
+	const guestNumberCards = typeof rawData.gnc === "boolean" ? rawData.gnc : settings.scenario.guestNumberCards
 
 	return {
-		name: name,
 		roleNames: roleNames,
 		scenarioSettings: {
-			gamemode: gamemode,
+			name: name,
+			gamemodes: gamemodes,
 			guestNumberCards: guestNumberCards,
 		},
 	}
 }
 
 export function generateRolesFromNames(roleNames: string[]): RoleData[] {
-	const starterId = generateRoleId()
+	const starterId = roles.generateRoleId()
 	const scenarioRoles: RoleData[] = []
 
 	roleNames.forEach((roleName, index) => {
@@ -111,7 +109,7 @@ export function generateRolesFromNames(roleNames: string[]): RoleData[] {
 
 		const isValidRole = isAlignmentRole
 			? roles.rolesByAlignment[roleName as Alignment] !== undefined
-			: roles.roleList.indexOf(roleName) !== -1
+			: roles.isValidRole(roleName)
 
 		if (!isValidRole) {
 			scenarioRoles[index] = {
@@ -122,14 +120,14 @@ export function generateRolesFromNames(roleNames: string[]): RoleData[] {
 				id: starterId + index,
 			}
 			return
-		}
-
-		scenarioRoles[index] = {
-			name: isAlignmentRole ? "Bystander" : roleName,
-			alignment: isAlignmentRole ? (roleName as Alignment) : roles.roleAlignments[roleName],
-			isAlignmentRole: isAlignmentRole,
-			optional: isOptionalRole,
-			id: starterId + index,
+		} else {
+			scenarioRoles[index] = {
+				name: isAlignmentRole ? "Bystander" : roleName,
+				alignment: isAlignmentRole ? (roleName as Alignment) : roles.getRoleAlignment(roleName),
+				isAlignmentRole: isAlignmentRole,
+				optional: isOptionalRole,
+				id: starterId + index,
+			}
 		}
 	})
 

@@ -1,5 +1,6 @@
 import settings from "../settings.mts"
 import type {Alignment, RoleData} from "../roles.mts"
+import roles from "../roles.mts"
 
 const LIST_TITLE_PREFIX = "# "
 const LIST_HEADING_PREFIX = "### "
@@ -12,23 +13,30 @@ interface ListItem {
 	count: number
 }
 
-function formatWikiLink(pageName: string, text?: string) {
-	return `[${text || pageName}](<${WIKI_URL_PREFIX + pageName.replaceAll(" ", "_")}>)`
+function formatWikiLink(url: string, text: string) {
+	if (url === "") {
+		return text
+	} else {
+		return `[${text}](<${url}>)`
+	}
 }
 
 function getListItemName(role: RoleData) {
 	let itemName = ""
 
 	if (role.isAlignmentRole) {
-		itemName = settings.shareList.wikiLinks
-			? `Any ${formatWikiLink(role.alignment + " Alignment", role.alignment)}`
+		itemName = settings.share.shareList.wikiLinks
+			? `Any ${formatWikiLink(WIKI_URL_PREFIX + role.alignment + "_Alignment", role.alignment)}`
 			: `Any ${role.alignment}`
 
 		if (role.alignment === "Unknown") {
 			itemName = "Any role"
 		}
 	} else {
-		itemName = settings.shareList.wikiLinks ? formatWikiLink(role.name) : role.name
+		itemName = settings.share.shareList.wikiLinks ? formatWikiLink(roles.getRoleLink(role.name), role.name) : role.name
+		if (roles.isCustomRole(role.name)) {
+			itemName += "\\*"
+		}
 	}
 
 	if (role.optional) {
@@ -54,7 +62,7 @@ function createListItems(roles: RoleData[]) {
 	roles.forEach((role) => {
 		const listItem = findRoleInList(listItems, role)
 
-		if (listItem && settings.shareList.groupDuplicates) {
+		if (listItem && settings.share.shareList.groupDuplicates) {
 			listItem.count++
 			return
 		}
@@ -75,21 +83,39 @@ function getStringFromListItem(listItem: ListItem) {
 	for (let index = 0; index < listItem.count; index++) {
 		output += "\n" + LIST_ITEM_PREFIX + listItem.name
 
-		if (settings.shareList.groupDuplicates) break
+		if (settings.share.shareList.groupDuplicates) break
 	}
 
-	if (listItem.count > 1 && settings.shareList.groupDuplicates) {
+	if (listItem.count > 1 && settings.share.shareList.groupDuplicates) {
 		output += ` [×${listItem.count}]`
 	}
 
 	return output
 }
 
-export default function generateScenarioList(name: string, link: string, roles: RoleData[]): string {
+export default function generateScenarioList(name: string, link: string, scenarioRoles: RoleData[]): string {
 	let scenarioList = `${LIST_TITLE_PREFIX}[${name}](<${link}>)`
-	const listItems = createListItems(roles)
 
-	if (settings.shareList.alignmentHeadings) {
+	if (settings.scenario.gamemodes.length > 0) {
+		scenarioList += "\n-# " + (settings.scenario.gamemodes.length === 1 ? "Gamemode: " : "Gamemodes: ")
+		settings.scenario.gamemodes.forEach((gamemode, index) => {
+			scenarioList +=
+				formatWikiLink(WIKI_URL_PREFIX + "Gamemode#" + gamemode, gamemode) +
+				(index < settings.scenario.gamemodes.length - 1 ? ", " : "")
+		})
+	}
+
+	if (settings.scenario.guestNumberCards !== undefined) {
+		scenarioList += "\n-# Guest Number Cards " + (settings.scenario.guestNumberCards ? "required" : "prohibited")
+	}
+
+	if (scenarioRoles.find((role) => roles.isCustomRole(role.name))) {
+		scenarioList += "\n-# \\* Custom roles in use"
+	}
+
+	const listItems = createListItems(scenarioRoles)
+
+	if (settings.share.shareList.alignmentHeadings) {
 		const alignmentGroupedListItems: Partial<Record<Alignment, ListItem[]>> = {}
 
 		listItems.forEach((listItem) => {
@@ -102,7 +128,7 @@ export default function generateScenarioList(name: string, link: string, roles: 
 			}
 		})
 
-		settings.sortOrders[settings.sortRoles.sortBy === "Lights out phase" ? "lightsOut" : "alignment"].forEach(
+		settings.sortOrders[settings.controls.sortRoles.sortBy === "Lights out phase" ? "lightsOut" : "alignment"].forEach(
 			(alignment) => {
 				const alignmentGroup = alignmentGroupedListItems[alignment]
 				if (!alignmentGroup) return

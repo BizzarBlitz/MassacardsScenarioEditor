@@ -19,7 +19,7 @@ function onClick(event: MouseEvent) {
 		type="button"
 		:title="name"
 		@click="onClick"
-		class="flex cursor-pointer items-center gap-2 border-10 transition-opacity hover:opacity-60 focus-visible:opacity-60"
+		class="flex cursor-pointer items-center justify-center gap-2 border-10 transition-opacity hover:opacity-60 focus-visible:opacity-60"
 		style="border-image-source: url(images/roundedBackground.png); border-image-slice: calc(2 * 16) fill"
 	>
 		<img

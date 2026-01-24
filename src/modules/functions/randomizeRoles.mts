@@ -67,9 +67,9 @@ function getRandomRoleName(roleNamePool: RoleNamePool, alignment: Alignment): st
 
 function getRoleNamePool(maintainAlignments: boolean): RoleNamePool {
 	if (maintainAlignments) {
-		return structuredClone(roles.rolesByAlignment)
+		return structuredClone(roles.completeRolesByAlignment.value)
 	} else {
-		return [...roles.roleList]
+		return [...roles.completeRoleList.value]
 	}
 }
 
@@ -110,7 +110,7 @@ function removeReplaceableSuperRolesFromNamePool(
 
 	existingReplaceableRoles.forEach((role) => {
 		const superRoleName = replaceableSuperRoles[role.name]
-		const superRoleAlignment = roles.roleAlignments[superRoleName]
+		const superRoleAlignment = roles.getRoleAlignment(superRoleName)
 		removeRoleNameFromPool(roleNamePool, superRoleName, superRoleAlignment)
 	})
 }
@@ -188,7 +188,7 @@ export default function randomizeRoles(targets: RoleData[], scenarioRoles: RoleD
 
 		const replaceableSuperRoleName = replaceableSuperRoles[roleName]
 		if (!settings.allowReplaceableSuperRoles && replaceableSuperRoleName) {
-			removeRoleNameFromPool(roleNamePool, replaceableSuperRoleName, roles.roleAlignments[replaceableSuperRoleName])
+			removeRoleNameFromPool(roleNamePool, replaceableSuperRoleName, roles.getRoleAlignment(replaceableSuperRoleName))
 		}
 	})
 }

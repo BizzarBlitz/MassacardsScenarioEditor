@@ -1,23 +1,29 @@
 <script setup lang="ts">
-import {ref, watch, type Ref} from "vue"
+import {computed, ref, useTemplateRef, watch, type Ref} from "vue"
 
 defineOptions({
 	inheritAttrs: false,
+})
+defineExpose({
+	focus: focusInput,
 })
 const props = defineProps<{
 	options: string[]
 	value: string
 }>()
+const sortedAutocompleteOptions = computed(() => {
+	return props.options.toSorted((a, b) => {
+		// Sort from shortest to longest to prevent overrides (Hostage and Host for example)
+		return a.length - b.length
+	})
+})
+
 const emit = defineEmits<{
 	inputStringChanged: [newInput: string, isValid: boolean]
-	// [TODO]: Possibly 'autocompleteStringChanged: string | null'?
 }>()
 const value = defineModel<string>({required: true})
 
-// Sort from shortest to longest to prevent overrides (Hostage and Host for example)
-const autocompleteOptions = props.options.toSorted((a, b) => {
-	return a.length - b.length
-})
+const autocompleteInput = useTemplateRef("autocomplete-input")
 
 const inputString = ref(props.value || "") as Ref<string>
 
@@ -39,7 +45,10 @@ watch(inputString, (newString) => {
 		return
 	}
 
-	const [autocompletedString, isCompleteString] = findBestAutocompleteOption(autocompleteOptions, inputString.value)
+	const [autocompletedString, isCompleteString] = findBestAutocompleteOption(
+		sortedAutocompleteOptions.value,
+		inputString.value,
+	)
 
 	if (inputString.value.toLowerCase() === autocompletedString?.toLowerCase()) {
 		inputString.value = autocompletedString
@@ -86,6 +95,10 @@ function onEnterPressed() {
 	if (showAutocomplete) {
 		fillAutocomplete()
 	}
+}
+
+function focusInput(options?: FocusOptions) {
+	autocompleteInput.value?.focus(options)
 }
 </script>
 

@@ -40,7 +40,7 @@ function compareBooleans(a: boolean, b: boolean, prioritizedValue: boolean) {
 export default function sortRoles(roles: RoleData[]) {
 	roles.sort((aRole, bRole) => {
 		// Isolate required roles
-		if (settings.sortRoles.isolateRequiredRoles) {
+		if (settings.controls.sortRoles.isolateRequiredRoles) {
 			const aIndex = REQUIRED_ROLE_NAMES.indexOf(aRole.name)
 			const bIndex = REQUIRED_ROLE_NAMES.indexOf(bRole.name)
 
@@ -57,7 +57,7 @@ export default function sortRoles(roles: RoleData[]) {
 		}
 
 		// Sort by alignment
-		if (settings.sortRoles.sortBy === "Alignment" && aRole.alignment !== bRole.alignment) {
+		if (settings.controls.sortRoles.sortBy === "Alignment" && aRole.alignment !== bRole.alignment) {
 			return (
 				settings.sortOrders.alignment.indexOf(aRole.alignment) -
 				settings.sortOrders.alignment.indexOf(bRole.alignment)
@@ -65,7 +65,7 @@ export default function sortRoles(roles: RoleData[]) {
 		}
 
 		// Sort by lights out
-		if (settings.sortRoles.sortBy === "Lights out phase") {
+		if (settings.controls.sortRoles.sortBy === "Lights out phase") {
 			const aLightsOutPriority = getLightsOutPriority(aRole)
 			const bLightsOutPriority = getLightsOutPriority(bRole)
 
@@ -85,7 +85,7 @@ export default function sortRoles(roles: RoleData[]) {
 		}
 
 		// Prioritize super roles
-		if (settings.sortRoles.prioritizeSuperRoles) {
+		if (settings.controls.sortRoles.prioritizeSuperRoles) {
 			const aIsSuperRole = SUPER_ROLE_NAMES.indexOf(aRole.name) !== -1
 			const bIsSuperRole = SUPER_ROLE_NAMES.indexOf(bRole.name) !== -1
 
@@ -94,7 +94,7 @@ export default function sortRoles(roles: RoleData[]) {
 			}
 		}
 
-		if (settings.sortRoles.sortBy === "Name") {
+		if (settings.controls.sortRoles.sortBy === "Name") {
 			return aRole.name.localeCompare(bRole.name)
 		}
 

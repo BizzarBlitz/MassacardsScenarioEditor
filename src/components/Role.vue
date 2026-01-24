@@ -2,7 +2,6 @@
 import {computed} from "vue"
 import Autocomplete from "./Autocomplete.vue"
 import IconButton from "./IconButton.vue"
-import generateRoleId from "../modules/functions/generateRoleId.mts"
 import roles, {type Alignment, type RoleData} from "../modules/roles.mts"
 import settings from "../modules/settings.mts"
 import alignments from "../modules/alignments.json"
@@ -18,22 +17,24 @@ const scenarioRoles = defineModel<RoleData[]>({
 	required: true,
 })
 
-// Awesome vue tip: Replaced ref with computed whenever props are being annoying
 const roleName = computed(() =>
 	props.roleData.isAlignmentRole
 		? `Any ${props.roleData.alignment === "Unknown" ? "Role" : props.roleData.alignment}`
 		: props.roleData.name,
 )
 const alignmentName = computed(() => props.roleData.alignment)
-const wikiLink = computed(
-	() =>
-		`https://massacards.miraheze.org/wiki/${props.roleData.isAlignmentRole ? `${props.roleData.alignment} Alignment` : props.roleData.name}`,
-)
+const roleLink = computed(() => {
+	if (props.roleData.isAlignmentRole) {
+		return `https://massacards.miraheze.org/wiki/${props.roleData.alignment}_Alignment`
+	} else {
+		return roles.getRoleLink(props.roleData.name)
+	}
+})
 const roleIconSrc = computed(() => {
 	if (props.roleData.isAlignmentRole) {
 		return `images/alignments/${props.roleData.alignment}.png`
 	} else {
-		return `images/roles/${props.roleData.name}.png`
+		return roles.getRoleIcon(props.roleData.name)
 	}
 })
 
@@ -41,7 +42,7 @@ function onRoleNameChanged(newRoleName: string, isValid: boolean) {
 	if (!isValid) return
 
 	props.roleData.name = newRoleName
-	props.roleData.alignment = roles.roleAlignments[newRoleName]
+	props.roleData.alignment = roles.getRoleAlignment(newRoleName)
 	props.roleData.isAlignmentRole = false
 }
 
@@ -63,7 +64,7 @@ function duplicateRole(event: Event) {
 		alignment: props.roleData.alignment,
 		isAlignmentRole: props.roleData.isAlignmentRole,
 		optional: props.roleData.optional,
-		id: generateRoleId(),
+		id: roles.generateRoleId(),
 	})
 
 	event.stopPropagation()
@@ -71,10 +72,10 @@ function duplicateRole(event: Event) {
 
 function randomizeRole() {
 	randomizeRoles([props.roleData], scenarioRoles.value, {
-		allowDuplicates: settings.randomizeRoles.allowDuplicates,
-		maintainAlignments: settings.randomizeRoles.maintainAlignments,
+		allowDuplicates: settings.controls.randomizeRoles.allowDuplicates,
+		maintainAlignments: settings.controls.randomizeRoles.maintainAlignments,
 		preserveRequiredRoles: false, // If this is a required role we still want to randomize it regardless
-		allowReplaceableSuperRoles: settings.randomizeRoles.allowReplaceableSuperRoles,
+		allowReplaceableSuperRoles: settings.controls.randomizeRoles.allowReplaceableSuperRoles,
 	})
 }
 
@@ -86,7 +87,7 @@ function onAlignmentClicked() {
 <template>
 	<div @click="$event.stopPropagation()" @click.middle="deleteRole" class="w-41 place-items-center">
 		<Autocomplete
-			:options="roles.roleList"
+			:options="roles.completeRoleList.value"
 			@input-string-changed="onRoleNameChanged"
 			autocomplete="off"
 			placeholder="No role name"
@@ -98,10 +99,15 @@ function onAlignmentClicked() {
 		<div class="role-settings-container group grid grid-cols-[1.125rem_1fr_1.125rem_1.125rem] grid-rows-1">
 			<div class="col-[1_/_span_2] ml-4.5 aspect-square w-full transition-[margin] duration-100 group-hover:ml-0">
 				<div class="role-icon-container grid cursor-move grid-cols-1 grid-rows-1">
-					<img :src="roleIconSrc" :alt="`${props.roleData.name} role icon`" class="col-1 row-1" />
+					<img
+						:src="roleIconSrc"
+						:alt="`${roleData.name} role icon`"
+						class="col-1 row-1 h-full w-full"
+						style="image-rendering: pixelated"
+					/>
 					<div
 						class="col-1 row-1 p-1 opacity-0 transition-opacity duration-100 group-hover:opacity-100"
-						:class="{'opacity-100': props.roleData.optional}"
+						:class="{'opacity-100': roleData.optional}"
 					>
 						<ButtonOption
 							:name="`Optional: ${roleData.optional}`"
@@ -109,7 +115,7 @@ function onAlignmentClicked() {
 								{value: false, icon: 'images/alignments/Unknown.png'},
 								{value: true, icon: 'images/alignments/Unknown.png'},
 							]"
-							v-model="props.roleData.optional"
+							v-model="roleData.optional"
 							class="h-8 bg-black"
 						/>
 					</div>
@@ -117,7 +123,7 @@ function onAlignmentClicked() {
 				<div class="mt-1 flex w-32 max-w-40 gap-1">
 					<IconButton
 						:name="roleData.isAlignmentRole ? 'Make normal role' : 'Make alignment role'"
-						:icon="`images/alignments/${props.roleData.alignment}.png`"
+						:icon="`images/alignments/${roleData.alignment}.png`"
 						@click="onAlignmentClicked"
 						class="h-8"
 					/>
@@ -140,8 +146,24 @@ function onAlignmentClicked() {
 				<IconButton name="Delete" icon="images/icons/close.png" @click="deleteRole" />
 				<IconButton name="Duplicate" icon="images/icons/duplicate.png" @click="duplicateRole" />
 				<IconButton name="Randomize" icon="images/icons/randomize.png" @click="randomizeRole" />
-				<a :href="wikiLink" target="_blank" class="contents">
-					<IconButton name="Read wiki entry" icon="images/icons/wiki.png" @mousedown="$event.stopPropagation()" />
+				<a :href="roleLink" target="_blank" class="contents">
+					<IconButton
+						:name="
+							roles.isCustomRole(roleData.name)
+								? roleLink === ''
+									? 'No role information'
+									: 'View role information (external link)'
+								: 'View wiki entry'
+						"
+						:icon="
+							roles.isCustomRole(roleData.name)
+								? roleLink === ''
+									? 'images/icons/noLink.png'
+									: 'images/icons/link.png'
+								: 'images/icons/wiki.png'
+						"
+						@mousedown="$event.stopPropagation()"
+					/>
 				</a>
 			</div>
 		</div>
