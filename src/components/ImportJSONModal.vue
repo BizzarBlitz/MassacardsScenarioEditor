@@ -65,7 +65,6 @@ function applyJSONData(importedData: ScenarioJSON) {
 	}
 	if ("roles" in importedData) {
 		scenarioRoles.value = urlManager.generateRolesFromNames(importedData.roles)
-		console.log("changed roles:", scenarioRoles.value)
 	}
 }
 

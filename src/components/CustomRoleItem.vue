@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, toRef, useTemplateRef} from "vue"
+import {computed, toRef} from "vue"
 import IconButton from "./IconButton.vue"
 import type {Alignment} from "../modules/roles.mts"
 import Autocomplete from "./Autocomplete.vue"
@@ -12,6 +12,7 @@ const customRoles = defineModel<CustomRole[]>({
 const props = defineProps<{
 	customRole: CustomRole
 	index: number
+	importImageModal: {show: () => Promise<string>} | null
 }>()
 const customRole = toRef(props.customRole)
 
@@ -22,8 +23,6 @@ export type CustomRole = {
 	link: string
 	id: number
 }
-
-const iconInput = useTemplateRef("icon-input")
 
 const editLinkIcon = computed(() => {
 	return customRole.value.link !== "" ? "images/icons/link.png" : "images/icons/noLink.png"
@@ -38,40 +37,23 @@ function deleteCustomRole() {
 	customRoles.value.splice(props.index, 1)
 }
 
-function onIconChanged() {
-	if (!iconInput.value || !iconInput.value.files) return
+async function imageClicked() {
+	const newImage = await props.importImageModal?.show()
+	if (!newImage || newImage === "") return
 
-	const file = iconInput.value.files[0] || "images/roles/Placeholder.png"
-	customRole.value.icon = URL.createObjectURL(file)
+	customRole.value.icon = newImage
 }
 </script>
 
 <template>
 	<div class="flex w-full flex-col gap-1">
 		<div class="flex h-16 gap-3">
-			<div class="grid aspect-square h-full w-16 cursor-pointer grid-cols-1 grid-rows-1">
-				<input
-					type="file"
-					name="custom-role-icon"
-					accept="image/*"
-					title="Click to change icon"
-					@change="onIconChanged"
-					ref="icon-input"
-					:id="`icon-input-${customRole.id}`"
-					class="peer col-start-1 col-end-1 row-start-1 row-end-1 h-full cursor-pointer opacity-0 file:cursor-pointer"
-				/>
-				<label
-					:for="`icon-input-${customRole.id}`"
-					class="-z-10 col-start-1 col-end-1 row-start-1 row-end-1 peer-hover:opacity-50"
-				>
-					<img
-						:src="customRole.icon"
-						draggable="false"
-						class="h-full w-full hover:opacity-50"
-						style="image-rendering: pixelated"
-					/>
-				</label>
-			</div>
+			<IconButton
+				name="Change role icon"
+				:icon="customRole.icon"
+				@click="imageClicked"
+				class="aspect-square h-full w-16 cursor-pointer"
+			/>
 			<input
 				type="text"
 				spellcheck="false"
