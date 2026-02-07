@@ -52,6 +52,13 @@ const requiredJSONData = computed(() => {
 	props.roles.forEach((role) => {
 		if (roles.isCustomRole(role.name)) {
 			const customRole = roles.getCustomRole(role.name)!
+			if (
+				output.customRoles.find((customRole) => {
+					return customRole.name === role.name
+				})
+			)
+				return // Custom role already included in JSON
+
 			output.customRoles.push({
 				name: customRole.name,
 				alignment: customRole.alignment,
