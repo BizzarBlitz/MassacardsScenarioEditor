@@ -20,7 +20,6 @@ const icon = computed(() => {
 function onClick() {
 	const index = props.options.findIndex((option) => option.value === value.value)
 	const selectedOption = props.options[(index + 1) % props.options.length]
-
 	value.value = selectedOption.value
 }
 </script>

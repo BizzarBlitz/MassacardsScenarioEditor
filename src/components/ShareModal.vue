@@ -33,13 +33,33 @@ export type ExtraDataJSON = {
 	}[]
 }
 
+const shareRoles = computed(() => {
+	if (!settings.share.shareScreenshot.fillBystanders) {
+		return scenarioRoles.value
+	}
+
+	const filledRoles = [...scenarioRoles.value]
+	const bystandersToAdd = Math.max(0, 13 - filledRoles.length)
+	for (let i = 0; i < bystandersToAdd; i++) {
+		filledRoles.push({
+			name: "Bystander",
+			alignment: "Innocent",
+			isAlignmentRole: false,
+			optional: false,
+			id: roles.generateRoleId(),
+		})
+	}
+
+	return filledRoles
+})
+
 const copyLinkIcon = ref("images/icons/link.png")
 const copyListIcon = ref("images/icons/listCopy.png")
-const shareLink = ref(urlManager.generateLink(scenarioRoles.value, settings.scenario.name, settings.scenario))
-const shareList = computed(() => generateScenarioList(settings.scenario.name, shareLink.value, scenarioRoles.value))
+const shareLink = ref(urlManager.generateLink(shareRoles.value, settings.scenario.name, settings.scenario))
+const shareList = computed(() => generateScenarioList(settings.scenario.name, shareLink.value, shareRoles.value))
 
 function modalOpened() {
-	shareLink.value = urlManager.generateLink(scenarioRoles.value, settings.scenario.name, settings.scenario)
+	shareLink.value = urlManager.generateLink(shareRoles.value, settings.scenario.name, settings.scenario)
 }
 
 function modalClosed() {
@@ -63,16 +83,16 @@ function exportJSON() {
 </script>
 
 <template>
-	<ExportJSONModal :roles="scenarioRoles" ref="json-modal" />
+	<ExportJSONModal :roles="shareRoles" ref="json-modal" />
 	<Modal ref="share-modal" @opened="modalOpened" @closed="modalClosed" class="w-19/20">
 		<div class="flex h-full">
 			<div id="scenario-screenshot" class="flex flex-col gap-2">
 				<span class="inline-block text-4xl font-bold">Take a screenshot</span>
-				<div id="screenshot-container" class="overflow-auto">
+				<div id="screenshot-container" class="overflow-auto" style="scrollbar-width: none;">
 					<div class="mb-1 text-center text-3xl font-bold">{{ settings.scenario.name }}</div>
 					<Border class="m-2 overflow-auto">
 						<div class="flex max-w-252 flex-wrap place-content-center gap-y-4">
-							<div v-for="role in scenarioRoles" class="w-36 place-items-center">
+							<div v-for="role in shareRoles" class="w-36 place-items-center">
 								<div class="h-6 overflow-visible text-center font-bold whitespace-nowrap">
 									{{
 										role.isAlignmentRole
@@ -154,12 +174,21 @@ function exportJSON() {
 					</div>
 				</div>
 				<hr />
-				<div class="flex h-8 shrink-0 justify-end">
+				<div class="flex h-8 shrink-0 justify-end gap-2">
+					<ButtonOption
+						name="Fill empty roles with Bystanders"
+						:options="[
+							{value: true, icon: 'images/icons/insertBystander.png'},
+							{value: false, icon: 'images/icons/roleX.png'},
+						]"
+						v-model="settings.share.shareScreenshot.fillBystanders"
+						class="h-full grow-0"
+					/>
 					<ButtonOption
 						name="Show alignments"
 						:options="[
-							{value: false, icon: 'images/icons/maintainAlignmentsOff.png'},
 							{value: true, icon: 'images/icons/maintainAlignmentsOn.png'},
+							{value: false, icon: 'images/icons/maintainAlignmentsOff.png'},
 						]"
 						v-model="settings.share.shareScreenshot.showAlignments"
 						class="h-full grow-0"
@@ -167,7 +196,7 @@ function exportJSON() {
 				</div>
 			</div>
 
-			<div class="mx-8 h-full w-px bg-white"></div>
+			<div class="mx-6 h-full w-px bg-white"></div>
 
 			<div id="scenario-text" class="flex h-full grow flex-col">
 				<span class="mb-4 inline-block text-4xl font-bold">Copy text</span>

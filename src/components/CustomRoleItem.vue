@@ -4,6 +4,8 @@ import IconButton from "./IconButton.vue"
 import type {Alignment} from "../modules/roles.mts"
 import Autocomplete from "./Autocomplete.vue"
 import alignments from "../modules/alignments.json"
+import scenarioRoles from "../modules/scenarioRoles.mts"
+import roles from "../modules/roles.mts"
 
 const customRoles = defineModel<CustomRole[]>({
 	required: true,
@@ -31,6 +33,16 @@ const editLinkIcon = computed(() => {
 function onAlignmentChanged(newAlignment: string, isValid: boolean) {
 	if (!isValid) return
 	customRole.value.alignment = newAlignment as Alignment
+}
+
+function addCustomRole() {
+	scenarioRoles.value.push({
+		name: customRole.value.name,
+		alignment: customRole.value.alignment,
+		isAlignmentRole: false,
+		optional: false,
+		id: roles.generateRoleId(),
+	})
 }
 
 function deleteCustomRole() {
@@ -63,6 +75,7 @@ async function imageClicked() {
 				ref="name-input"
 				class="h-full w-full text-2xl font-semibold"
 			/>
+			<IconButton name="Add custom role" icon="images/icons/add.png" @click="addCustomRole" class="w-8" />
 			<IconButton name="Delete custom role" icon="images/icons/trash.png" @click="deleteCustomRole" class="w-8" />
 		</div>
 		<div class="flex h-8 gap-2">

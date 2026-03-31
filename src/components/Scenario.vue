@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {reactive, ref, useTemplateRef, watch} from "vue"
+import {computed, reactive, useTemplateRef, watch} from "vue"
 import Border from "./Border.vue"
 import ButtonOption from "./ButtonOption.vue"
 import IconButton from "./IconButton.vue"
+import OptionsButton from "./OptionsButton.vue"
 import Role from "./Role.vue"
 import ScenarioButtons from "./ScenarioButtons.vue"
 import settings from "../modules/settings.mts"
@@ -10,7 +11,6 @@ import scenarioRoles from "../modules/scenarioRoles.mts"
 import * as urlManager from "../modules/urlManager.mts"
 
 import {useSortable} from "@vueuse/integrations/useSortable"
-import OptionsButton from "./OptionsButton.vue"
 
 const emit = defineEmits<{
 	buttonClicked: [name: string, event: MouseEvent]
@@ -19,6 +19,7 @@ const emit = defineEmits<{
 const MAX_ROLES = 13
 
 const linkData = urlManager.parseLink(window.location.hash)
+settings.scenario.name = linkData.scenarioSettings.name
 settings.scenario.gamemodes = linkData.scenarioSettings.gamemodes
 settings.scenario.guestNumberCards = linkData.scenarioSettings.guestNumberCards
 
@@ -44,8 +45,6 @@ watch(settings.userSettings.customRoles, (customRoles) => {
 	})
 })
 
-const gamemodeMenuIcon = ref("images/icons/gamemodes/normal.png")
-
 const gamemodes = reactive({
 	Massacre: settings.scenario.gamemodes.includes("Massacre"),
 	Investigator: settings.scenario.gamemodes.includes("Investigator"),
@@ -57,24 +56,26 @@ const gamemodes = reactive({
 	Afterlife: settings.scenario.gamemodes.includes("Afterlife"),
 })
 
-watch(gamemodes, (gamemodes) => {
-	const appliedGamemodes = []
+watch(gamemodes, () => {
+	const enabledGamemodes = []
 
 	for (const [gamemode, enabled] of Object.entries(gamemodes)) {
 		if (enabled) {
-			appliedGamemodes.push(gamemode)
+			enabledGamemodes.push(gamemode)
 		}
 	}
 
-	if (appliedGamemodes.length === 0) {
-		gamemodeMenuIcon.value = "images/icons/gamemodes/normal.png"
-	} else if (appliedGamemodes.length === 1) {
-		gamemodeMenuIcon.value = "images/icons/gamemodes/" + appliedGamemodes[0].toLowerCase() + ".png"
-	} else {
-		gamemodeMenuIcon.value = "images/icons/gamemodeCounts/gamemode" + appliedGamemodes.length + ".png"
-	}
+	settings.scenario.gamemodes = enabledGamemodes
+})
 
-	settings.scenario.gamemodes = appliedGamemodes
+const gamemodeMenuIcon = computed(() => {
+	if (settings.scenario.gamemodes.length === 0) {
+		return "images/icons/gamemodes/normal.png"
+	} else if (settings.scenario.gamemodes.length === 1) {
+		return "images/icons/gamemodes/" + settings.scenario.gamemodes[0].toLowerCase() + ".png"
+	} else {
+		return "images/icons/gamemodeCounts/gamemode" + settings.scenario.gamemodes.length + ".png"
+	}
 })
 
 function deleteRole() {

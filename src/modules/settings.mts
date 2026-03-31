@@ -29,6 +29,7 @@ let defaultSettings = {
 	share: {
 		shareScreenshot: {
 			showAlignments: true,
+			fillBystanders: false,
 		},
 		shareList: {
 			wikiLinks: true,
@@ -84,12 +85,21 @@ function applySettingGroup(name: keyof typeof defaultSettings, storage: Storage)
 
 	try {
 		const storedSettings = JSON.parse(settingGroup)
-		for (const [key, value] of Object.entries(storedSettings)) {
+		for (const [key, storedValue] of Object.entries(storedSettings)) {
 			if (
 				key in defaultSettingGroup &&
-				(typeof defaultSettingGroup[key] === typeof value || defaultSettingGroup[key] === undefined)
+				(typeof defaultSettingGroup[key] === typeof storedValue || defaultSettingGroup[key] === undefined)
 			) {
-				defaultSettingGroup[key] = value
+				// If setting is object, then merge with default instead of overwriting it
+				if (typeof defaultSettingGroup[key] === "object" && defaultSettingGroup[key] !== null && !Array.isArray(defaultSettingGroup[key])) {
+					for (const [subKey, subValue] of Object.entries(storedValue as Object)) {
+						if (subKey in defaultSettingGroup[key]) {
+							defaultSettingGroup[key][subKey] = subValue
+						}
+					}
+				} else {
+					defaultSettingGroup[key] = storedValue
+				}
 			}
 		}
 	} catch (error) {
@@ -105,6 +115,7 @@ const settings = reactive(defaultSettings)
 export default settings
 
 watch(settings, (newSettings) => {
+	console.log("Settings changed:", newSettings)
 	for (const [settingGroup, storage] of Object.entries(savedSettings)) {
 		storage.setItem(settingGroup, JSON.stringify(newSettings[settingGroup as keyof typeof savedSettings]))
 	}

@@ -20,8 +20,10 @@ watch(
 function getScenarioRoles() {
 	const linkData = urlManager.parseLink(window.location.hash)
 	const scenarioRoleNames = isDefaultRoleNames(linkData.roleNames)
-		? JSON.parse(sessionStorage.getItem("scenarioRoles") || '["Killer", "Private Eye", "Witness"]')
-		: linkData.roleNames
+		? linkData.roleNames
+		: JSON.parse(sessionStorage.getItem("scenarioRoles") || '["Killer", "Private Eye", "Witness"]')
+
+	console.log(scenarioRoleNames)
 
 	return urlManager.generateRolesFromNames(scenarioRoleNames)
 }
